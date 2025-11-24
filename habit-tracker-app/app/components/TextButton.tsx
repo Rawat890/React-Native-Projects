@@ -13,7 +13,6 @@ interface TextButtonprops {
   textStyle?: TextStyle;
   backgroundColor?: string;
   rippleColor?: string;
-  fontSize?:number;
 }
 
 const TextButton: React.FC<TextButtonprops> = ({
@@ -25,14 +24,14 @@ const TextButton: React.FC<TextButtonprops> = ({
   rightIcon,
   style,
   textStyle,
-  backgroundColor,
+  backgroundColor = COLORS.primary,
   rippleColor,
 }) => {
 
-  const scale = useRef(new Animated.Value(1)).current;
+  const animatedScale = useRef(new Animated.Value(1)).current;
 
   const animationIn = () => {
-    Animated.spring(scale, {
+    Animated.spring(animatedScale, {
       toValue: 0.96,
       speed: 20,
       useNativeDriver: true
@@ -40,7 +39,7 @@ const TextButton: React.FC<TextButtonprops> = ({
   }
 
   const animationOut = () => {
-    Animated.spring(scale, {
+    Animated.spring(animatedScale, {
       toValue: 1,
       speed: 20,
       useNativeDriver: true,
@@ -48,18 +47,20 @@ const TextButton: React.FC<TextButtonprops> = ({
   }
 
   return (
-    <Animated.View style={{ transform: [{ scale }] }}>
-      <Pressable
-        android_ripple={{ color: rippleColor, borderless: false }}
-        onPress={onPress}
-        onPressIn={animationIn}
-        onPressOut={animationOut}
-        disabled={disabled || loading}
+    <Pressable
+      android_ripple={{ color: rippleColor || COLORS.white, borderless: false }}
+      onPress={onPress}
+      onPressIn={animationIn}
+      onPressOut={animationOut}
+      disabled={disabled || loading}
+    >
+      <Animated.View
         style={[
           styles.button,
           style,
           {
-            backgroundColor: disabled ? COLORS.disabled : backgroundColor
+            transform: [{ scale: animatedScale }],
+            backgroundColor: disabled ? COLORS.disabled : backgroundColor,
           },
         ]}
       >
@@ -72,8 +73,9 @@ const TextButton: React.FC<TextButtonprops> = ({
             {rightIcon && <View style={styles.icon}>{rightIcon}</View>}
           </View>
         )}
-      </Pressable>
-    </Animated.View>
+      </Animated.View>
+    </Pressable>
+
   )
 }
 
