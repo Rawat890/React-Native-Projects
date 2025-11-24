@@ -1,11 +1,14 @@
-import { View, Text } from 'react-native'
 import React from 'react'
+import AppNavigator from './navigation/AppNavigator';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 function App() {
   return (
-    <View>
-      <Text>App</Text>
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <AppNavigator />
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
 
