@@ -27,3 +27,12 @@ export const COLORS = {
 export type ColorKeys = keyof typeof Colors;
 export type ColorValue = (typeof Colors)[ColorKeys];
 
+
+export const habitColors = [ 
+    "#FF5733",
+    "#FFD700",
+    "#5D76A9",
+    "#1877F2",
+    "#CCCCFF",
+    "#4169E1",
+  ]
