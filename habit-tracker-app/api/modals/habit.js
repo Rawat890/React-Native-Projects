@@ -27,3 +27,7 @@ const habitSchema = new mongoose.Schema({
     default: Date.now,
   },
 })
+
+const Habit = mongoose.model('Habit', habitSchema);
+
+module.exports = Habit;
