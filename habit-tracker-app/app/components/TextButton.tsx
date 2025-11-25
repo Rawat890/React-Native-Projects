@@ -1,8 +1,20 @@
-import { View, Text, GestureResponderEvent, ViewStyle, TextStyle, Animated, Pressable, ActivityIndicator, StyleSheet, Platform } from 'react-native'
-import React, { ReactNode, useRef } from 'react'
-import { COLORS } from '../utils/colors';
-import { scale } from 'react-native-size-matters'
-interface TextButtonprops {
+import {
+  View,
+  Text,
+  GestureResponderEvent,
+  ViewStyle,
+  TextStyle,
+  Animated,
+  Pressable,
+  ActivityIndicator,
+  StyleSheet,
+  Platform,
+} from "react-native";
+import React, { ReactNode, useRef } from "react";
+import { COLORS } from "../utils/colors";
+import { scale } from "react-native-size-matters";
+
+interface TextButtonProps {
   title?: string;
   onPress?: (event: GestureResponderEvent) => void;
   loading?: boolean;
@@ -15,7 +27,7 @@ interface TextButtonprops {
   rippleColor?: string;
 }
 
-const TextButton: React.FC<TextButtonprops> = ({
+const TextButton: React.FC<TextButtonProps> = ({
   title = "Button",
   onPress,
   loading = false,
@@ -27,16 +39,15 @@ const TextButton: React.FC<TextButtonprops> = ({
   backgroundColor = COLORS.primary,
   rippleColor,
 }) => {
-
   const animatedScale = useRef(new Animated.Value(1)).current;
 
   const animationIn = () => {
     Animated.spring(animatedScale, {
       toValue: 0.96,
       speed: 20,
-      useNativeDriver: true
+      useNativeDriver: true,
     }).start();
-  }
+  };
 
   const animationOut = () => {
     Animated.spring(animatedScale, {
@@ -44,11 +55,14 @@ const TextButton: React.FC<TextButtonprops> = ({
       speed: 20,
       useNativeDriver: true,
     }).start();
-  }
+  };
 
   return (
     <Pressable
-      android_ripple={{ color: rippleColor || COLORS.white, borderless: false }}
+      android_ripple={{
+        color: rippleColor || COLORS.white,
+        borderless: false,
+      }}
       onPress={onPress}
       onPressIn={animationIn}
       onPressOut={animationOut}
@@ -57,11 +71,11 @@ const TextButton: React.FC<TextButtonprops> = ({
       <Animated.View
         style={[
           styles.button,
-          style,
           {
             transform: [{ scale: animatedScale }],
             backgroundColor: disabled ? COLORS.disabled : backgroundColor,
           },
+          style,
         ]}
       >
         {loading ? (
@@ -69,17 +83,29 @@ const TextButton: React.FC<TextButtonprops> = ({
         ) : (
           <View style={styles.content}>
             {leftIcon && <View style={styles.icon}>{leftIcon}</View>}
-            {title && <Text style={[styles.text, textStyle]}>{title}</Text>}
+
+            {title && (
+              <Text
+                style={[
+                  styles.text,
+                  // If user provides a color → use it
+                  { color: textStyle?.color ?? (disabled ? COLORS.gray500 : COLORS.white) },
+                  textStyle,
+                ]}
+              >
+                {title}
+              </Text>
+            )}
+
             {rightIcon && <View style={styles.icon}>{rightIcon}</View>}
           </View>
         )}
       </Animated.View>
     </Pressable>
+  );
+};
 
-  )
-}
-
-export default TextButton
+export default TextButton;
 
 const styles = StyleSheet.create({
   button: {
@@ -91,7 +117,6 @@ const styles = StyleSheet.create({
     overflow: Platform.OS === "android" ? "hidden" : "visible",
   },
   text: {
-    color: COLORS.white,
     fontSize: scale(14),
     fontWeight: "600",
   },
