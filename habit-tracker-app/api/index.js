@@ -18,3 +18,25 @@ console.log("Error white connecting to mongoDb - ", err));
 app.listen(port, ()=>{
   console.log("Server running on port - ", port)
 })
+
+//endpoint to create a habit in backend
+
+const Habit = require("./modals/habit")
+app.post("/create-habit", async (req, res) => {
+  try {
+    const {title, color, repeatMode, reminder} = req.body;
+
+    const newHabit = new Habit({
+      title,
+      color,
+      repeatMode,
+      reminder,
+    })
+
+    //save to backend
+    const savedhHabit = await newHabit.save();
+    res.status(200).json(savedhHabit);
+  } catch (error) {
+    res.status(500).json({error: "Network error occured"})
+  }
+})
