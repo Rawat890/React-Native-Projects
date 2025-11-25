@@ -1,3 +1,4 @@
 export const SCREENS = {
-  Home: "Home"
+  Home: "Home",
+  CreateHabit: "CreateHabit",
 }
