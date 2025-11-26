@@ -10,33 +10,38 @@ import { SCREENS } from '../utils/routes';
 export default function Home() {
   const [option, setOption] = useState('Today');
   const navigation = useNavigation();
-  
-  const createHabit = () =>{
+
+  const createHabit = () => {
     navigation.navigate(SCREENS.CreateHabit);
   }
   return (
-    <View style={{flex:1, backgroundColor: COLORS.white}}>
+    <View style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={styles.iconContainer}>
         <Ionicons name='logo-foursquare' size={24} color={COLORS.black} />
         <Text style={styles.text}>Habit Tracking App</Text>
-        <AntDesign name='plus' size={24} color={COLORS.black} onPress={createHabit}/>
+        <AntDesign name='plus' size={24} color={COLORS.black} onPress={createHabit} />
       </View>
       <View style={styles.buttonContainer}>
         <TextButton
           title='Today'
           backgroundColor={option === "Today" ? COLORS.primary : COLORS.gray300}
           onPress={() => setOption('Today')}
-
+          textStyle={styles.textButton}
         />
         <TextButton
           title='Weekly'
           backgroundColor={option === "Weekly" ? COLORS.secondary : COLORS.gray300}
           onPress={() => setOption('Weekly')}
+          textStyle={styles.textButton}
+
+
         />
         <TextButton
           title='Overall'
           backgroundColor={option === "Overall" ? COLORS.success : COLORS.gray300}
           onPress={() => setOption('Overall')}
+          textStyle={styles.textButton}
+
         />
       </View>
     </View>
@@ -49,7 +54,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: scale(10),
     marginHorizontal: scale(10),
-    alignItems:'center',
+    alignItems: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -57,8 +62,11 @@ const styles = StyleSheet.create({
     marginTop: scale(20)
   },
   text: {
-    fontSize: scale(20),
-    fontWeight: 'bold',
+    fontSize: scale(16),
+    fontWeight: '600',
     textAlign: 'center',
+  },
+  textButton: {
+    fontSize: scale(11)
   }
 })
