@@ -46,20 +46,15 @@ app.post("/create-habit", async (req, res) => {
 app.get("/habitsList", async (req, res) => {
   try {
     const habitsList = await Habit.find({});
-
     res.status(200).json(habitsList);
   } catch (error) {
-    res.status(500).json({error: "Error occured while fetching habits"})
+    res.status(500).json({error: "Error occured while fetching habits"});
   }
-})
-
-app.put()
-
+});
 
 app.put("/create-habit/:habitId/completed/:day", async (req, res) => {
   try {
-
-    const {habitId, day} =req.params;
+    const { habitId, day } = req.params;
     const habit = await Habit.findById(habitId);
 
     if (!habit) {
@@ -67,10 +62,10 @@ app.put("/create-habit/:habitId/completed/:day", async (req, res) => {
     }
 
     habit.completed[day] = true;
-    await habit.save()
+    await habit.save();
     res.status(200).json(habit);
 
   } catch (error) {
-    res.status(500).json({error: "Error occcured while updating habit completion"})
+    res.status(500).json({error: "Error occured while updating habit completion"});
   }
-})
+});
