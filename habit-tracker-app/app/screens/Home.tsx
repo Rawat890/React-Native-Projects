@@ -1,26 +1,31 @@
-import { View, Text, StyleSheet, Alert, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, Alert, Image, Pressable } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { AntDesign, FontAwesome, FontAwesome6, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { COLORS } from '../utils/colors';
 import TextButton from '../components/TextButton';
 import { scale } from 'react-native-size-matters';
 import { SCREENS } from '../utils/routes';
 import { navigate } from '../utils/navigationService';
 import axios from 'axios';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function Home() {
   const [option, setOption] = useState('Today');
   const [habits, setHabits] = useState([]);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const [selectedHabit, setSelectedHabit] = useState(null);
 
-  useEffect(()=>{
-  fetchHabitsList();
+
+  useEffect(() => {
+    fetchHabitsList();
   }, []);
-  
-  const fetchHabitsList = async ()=>{
+
+  const fetchHabitsList = async () => {
     try {
       const response = await axios.get('http://192.168.29.24:3000/habitsList');
 
-      if (response.status===200) {
+      if (response.status === 200) {
         setHabits(response.data);;
         console.log('Habits - ', habits)
       }
@@ -29,64 +34,118 @@ export default function Home() {
     }
   }
 
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
   console.log(habits)
   const createHabit = () => {
     navigate(SCREENS.CreateHabit);
   }
+
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-      <View style={styles.iconContainer}>
-        <Ionicons name='logo-foursquare' size={24} color={COLORS.black} />
-        <Text style={styles.text}>Habit Tracking App</Text>
-        <AntDesign name='plus' size={24} color={COLORS.black} onPress={createHabit} />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TextButton
-          title='Today'
-          backgroundColor={option === "Today" ? COLORS.primary : COLORS.gray300}
-          onPress={() => setOption('Today')}
-          textStyle={styles.textButton}
-        />
-        <TextButton
-          title='Weekly'
-          backgroundColor={option === "Weekly" ? COLORS.secondary : COLORS.gray300}
-          onPress={() => setOption('Weekly')}
-          textStyle={styles.textButton}
+    <>
+      <View style={{ flex: 1, backgroundColor: COLORS.white }}>
+        <View style={styles.iconContainer}>
+          <Ionicons name='logo-foursquare' size={24} color={COLORS.black} />
+          <Text style={styles.text}>Habit Tracking App</Text>
+          <AntDesign name='plus' size={24} color={COLORS.black} onPress={createHabit} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TextButton
+            title='Today'
+            backgroundColor={option === "Today" ? COLORS.primary : COLORS.gray300}
+            onPress={() => setOption('Today')}
+            textStyle={styles.textButton}
+          />
+          <TextButton
+            title='Weekly'
+            backgroundColor={option === "Weekly" ? COLORS.secondary : COLORS.gray300}
+            onPress={() => setOption('Weekly')}
+            textStyle={styles.textButton}
 
 
-        />
-        <TextButton
-          title='Overall'
-          backgroundColor={option === "Overall" ? COLORS.success : COLORS.gray300}
-          onPress={() => setOption('Overall')}
-          textStyle={styles.textButton}
+          />
+          <TextButton
+            title='Overall'
+            backgroundColor={option === "Overall" ? COLORS.success : COLORS.gray300}
+            onPress={() => setOption('Overall')}
+            textStyle={styles.textButton}
 
-        />
-      </View>
+          />
+        </View>
 
-      {
-        option === "Today" && 
-        habits.length > 0? (
-          <View style={styles.habitsContainer}>
-            {habits.map((habit, index)=>(
-              <TextButton
-                key={index}
-                backgroundColor={habit.color ? habit.color : COLORS.secondary}
-                title={habit.title}
-                style={styles.habitStyle}
+        {
+          option === "Today" &&
+            habits.length > 0 ? (
+            <View style={styles.habitsContainer}>
+              {habits.map((habit, index) => (
+                <TextButton
+                  key={index}
+                  backgroundColor={habit.color ? habit.color : COLORS.secondary}
+                  title={habit.title}
+                  style={styles.habitStyle}
+                  onPress={() => {
+                    setSelectedHabit(habit);
+                    bottomSheetRef.current?.expand();
+                  }}
+
+                />
+              ))}
+            </View>
+          ) : (
+            <View style={styles.noHabitContainer}>
+              <Image style={{ width: 60, height: 60, resizeMode: 'contain' }}
+                source={require('../../assets/icons/empty.png')}
               />
-            ))}
-          </View>
-        ) :(
-          <View style={styles.noHabitContainer}>
-            <Image style={{width: 60, height: 60, resizeMode: 'contain'}}
-            source={require('../../assets/icons/empty.png')}
-            />
-            <Text>No habits scheduled today</Text>
-          </View>
-        )
-      }
-    </View>
+              <Text>No habits scheduled today</Text>
+            </View>
+          )
+        }
+      </View>
+
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={-1}
+          snapPoints={[scale(200)]}
+          enablePanDownToClose={true}
+          onChange={(index) => {
+            if (index === -1) setSelectedHabit(null);
+          }}
+        >
+          <BottomSheetView style={{ padding: scale(20) }}>
+            {selectedHabit ? (
+              <>
+              <Text style={{marginVertical:scale(5), fontWeight: '500'}}>Options</Text>
+              <Pressable style={styles.bottomSheetOption}>
+                <Octicons name="tracked-by-closed-completed" size={24} color="black" />
+                <Text> Completed</Text>
+              </Pressable>
+              <Pressable style={styles.bottomSheetOption}>
+                <Ionicons name="play-skip-forward-circle-outline" size={24} color="black" />
+                <Text> Skip</Text>
+              </Pressable>
+              <Pressable style={styles.bottomSheetOption}>
+               <FontAwesome name="edit" size={24} color="black" />
+                <Text> Edit</Text>
+              </Pressable>
+              <Pressable style={styles.bottomSheetOption}>
+                <FontAwesome6 name="file-archive" size={24} color="black" />
+                <Text> Archive</Text>
+              </Pressable>
+              <Pressable style={styles.bottomSheetOption}>
+                <MaterialIcons name="delete-outline" size={24} color="black" />
+                <Text> Delete</Text>
+              </Pressable>
+              </>
+            ) : null}
+          </BottomSheetView>
+        </BottomSheet>
+
+      </GestureHandlerRootView>
+
+    </>
   )
 }
 
@@ -111,18 +170,24 @@ const styles = StyleSheet.create({
   textButton: {
     fontSize: scale(11)
   },
-  habitStyle:{
+  habitStyle: {
     marginVertical: scale(5),
     marginHorizontal: scale(10),
     borderRadius: scale(25)
   },
-  habitsContainer:{
+  habitsContainer: {
     marginTop: scale(15),
   },
-  noHabitContainer:{
-    flex:1,
-    justifyContent:'center',
-     alignItems:'center',
-     marginTop: scale(-50),
+  noHabitContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: scale(-50),
+  },
+  bottomSheetOption:{
+    flexDirection:'row',
+    gap: scale(10),
+    marginVertical:scale(5),
+    alignItems:'center'
   }
 })
