@@ -52,18 +52,20 @@ app.get("/habitsList", async (req, res) => {
   }
 });
 
-app.put("/create-habit/:habitId/completed/:day", async (req, res) => {
+app.put("/create-habit/:habitId/completed", async (req, res) => {
+  const habitId = req.params.habitId;
+  const updatedCompletion = req.body.completed;
   try {
-    const { habitId, day } = req.params;
-    const habit = await Habit.findById(habitId);
+    const updatedHabit = await Habit.findByIdAndUpdate(
+      habitId,
+      {completed: updatedCompletion},
+      {new: true},
+    );
 
-    if (!habit) {
+    if (!updatedHabit) {
       return res.status(404).json({error: "Habit not found"});
     }
-
-    habit.completed[day] = true;
-    await habit.save();
-    res.status(200).json(habit);
+    res.status(200).json(updatedHabit);
 
   } catch (error) {
     res.status(500).json({error: "Error occured while updating habit completion"});
