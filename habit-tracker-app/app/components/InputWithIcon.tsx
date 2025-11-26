@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { scale } from 'react-native-size-matters';
+import { COLORS } from '../utils/colors';
 
 interface InputWithIconProps extends TextInputProps {
   label?: string;
@@ -82,7 +83,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: scale(10),
     top: scale(8),
-    fontSize: scale(14),
+    marginBottom:10,
+    fontSize: scale(10),
     color: 'gray',
     zIndex: 1,
   },
@@ -106,13 +108,13 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: scale(16),
-    color: '#000',
+    fontSize: scale(12),
+    color: COLORS.black,
+    marginTop: scale(8),
   },
   charCount: {
     textAlign: 'right',
     fontSize: scale(12),
-    color: 'gray',
     marginTop: 4,
   },
   error: {
