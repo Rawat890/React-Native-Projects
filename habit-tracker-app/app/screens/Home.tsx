@@ -1,18 +1,37 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StyleSheet, Alert, Image } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../utils/colors';
 import TextButton from '../components/TextButton';
 import { scale } from 'react-native-size-matters';
-import { useNavigation } from '@react-navigation/native';
 import { SCREENS } from '../utils/routes';
+import { navigate } from '../utils/navigationService';
+import axios from 'axios';
 
 export default function Home() {
   const [option, setOption] = useState('Today');
-  const navigation = useNavigation();
+  const [habits, setHabits] = useState([]);
 
+  useEffect(()=>{
+  fetchHabitsList();
+  }, []);
+  
+  const fetchHabitsList = async ()=>{
+    try {
+      const response = await axios.get('http://192.168.29.24:3000/habitsList');
+
+      if (response.status===200) {
+        setHabits(response.data);;
+        console.log('Habits - ', habits)
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to fetch the habits list.")
+    }
+  }
+
+  console.log(habits)
   const createHabit = () => {
-    navigation.navigate(SCREENS.CreateHabit);
+    navigate(SCREENS.CreateHabit);
   }
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -44,6 +63,29 @@ export default function Home() {
 
         />
       </View>
+
+      {
+        option === "Today" && 
+        habits.length > 0? (
+          <View style={styles.habitsContainer}>
+            {habits.map((habit, index)=>(
+              <TextButton
+                key={index}
+                backgroundColor={habit.color ? habit.color : COLORS.secondary}
+                title={habit.title}
+                style={styles.habitStyle}
+              />
+            ))}
+          </View>
+        ) :(
+          <View style={styles.noHabitContainer}>
+            <Image style={{width: 60, height: 60, resizeMode: 'contain'}}
+            source={require('../../assets/icons/empty.png')}
+            />
+            <Text>No habits scheduled today</Text>
+          </View>
+        )
+      }
     </View>
   )
 }
@@ -68,5 +110,19 @@ const styles = StyleSheet.create({
   },
   textButton: {
     fontSize: scale(11)
+  },
+  habitStyle:{
+    marginVertical: scale(5),
+    marginHorizontal: scale(10),
+    borderRadius: scale(25)
+  },
+  habitsContainer:{
+    marginTop: scale(15),
+  },
+  noHabitContainer:{
+    flex:1,
+    justifyContent:'center',
+     alignItems:'center',
+     marginTop: scale(-50),
   }
 })
