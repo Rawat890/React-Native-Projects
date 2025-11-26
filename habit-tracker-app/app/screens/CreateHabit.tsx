@@ -8,42 +8,50 @@ import TextButton from '../components/TextButton'
 import { days } from '../utils/others'
 import axios from 'axios'
 import { goBack } from '../utils/navigationService'
+import WrapperWithGradient from '../components/WrapperWithGradient'
 
-export default function CreateHabit() {
+export default function CreateHabit({route}) {
   const [selectedColor, setSelectedColor] = useState("");
   const [title, setTitle] = useState("");
+  const { onHabitAdded } = route.params || {};
 
-  const addHabitToBackend = async() =>{
-   try {
-    if (title === "") {
-      Alert.alert("Please enter a habit !");
-      return;
+  const addHabitToBackend = async () => {
+    try {
+      if (title === "") {
+        Alert.alert("Please enter a habit !");
+        return;
+      }
+      const habitDetails = {
+        title: title,
+        color: selectedColor,
+        repeatMode: "daily",
+        reminder: true,
+      }
+
+      const response = await axios.post("http://192.168.29.24:3000/create-habit", habitDetails);
+
+      if (response.status === 200) {
+        setTitle("");
+        Alert.alert("Success, Habit added successfully");
+      }
+
+      console.log('Habit added - ', response.data)
+
+    } catch (error) {
+      console.log("Error adding a habit - ", error)
     }
-    const habitDetails ={
-      title: title,
-      color: selectedColor,
-      repeatMode: "daily",
-      reminder: true,
-    }
+  }
 
-    const response = await axios.post("http://192.168.29.24:3000/create-habit", habitDetails);
-
-    if (response.status === 200) {
-      setTitle("");
-      Alert.alert("Success, Habit added successfully");
-    }
-
-    console.log('Habit added - ', response.data)
-    
-   } catch (error) {
-    console.log("Error adding a habit - ", error)
-   }
+  const navigateBack = () => {
+    onHabitAdded?.();
+    goBack();
   }
 
   return (
+    <WrapperWithGradient>
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
-        <Ionicons name='arrow-back' size={24} color={COLORS.black} onPress={()=>goBack()}/>
+        <Ionicons name='arrow-back' size={24} color={COLORS.black} onPress={navigateBack} />
         <Text style={styles.normalText}>Create Habit</Text>
 
         <View style={styles.input}>
@@ -52,7 +60,7 @@ export default function CreateHabit() {
             placeholder="Enter your habit..."
             keyboardType="email-address"
             value={title}
-            onChangeText={(text)=>setTitle(text)}
+            onChangeText={(text) => setTitle(text)}
           />
         </View>
 
@@ -105,9 +113,10 @@ export default function CreateHabit() {
           <Text style={styles.normalText}>Reminder</Text>
         </View>
 
-        <TextButton title='Save Habit' backgroundColor={COLORS.success} style={{ marginTop: scale(20), marginHorizontal: scale(0) }} onPress={addHabitToBackend}/>
+        <TextButton title='Save Habit' backgroundColor={COLORS.success} style={{ marginTop: scale(20), marginHorizontal: scale(0) }} onPress={addHabitToBackend} />
       </View>
     </View>
+    </WrapperWithGradient>
   )
 }
 
