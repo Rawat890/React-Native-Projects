@@ -7,3 +7,13 @@ export const days = [
   'S',
   'S',
 ]
+
+export const longDays = [
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thu',
+  'Fri',
+  'Sat',
+  'Sun',
+]
