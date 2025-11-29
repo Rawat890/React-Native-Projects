@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Alert, Image, Pressable, ScrollView, Platform } from 'react-native';
 import React, { useCallback, useRef, useState } from 'react';
-import { AntDesign, Ionicons, MaterialIcons, FontAwesome, Octicons, FontAwesome6 } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialIcons, FontAwesome, Octicons, FontAwesome6, Feather } from '@expo/vector-icons';
 import { COLORS } from '../utils/colors';
 import TextButton from '../components/TextButton';
 import { scale } from 'react-native-size-matters';
@@ -11,6 +11,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import WrapperWithGradient from '../components/WrapperWithGradient';
+import { days, longDays } from '../utils/others';
 
 export default function Home() {
   const [option, setOption] = useState('Today');
@@ -23,7 +24,7 @@ export default function Home() {
     weekday: 'short'
   }).slice(0, 3)
 
-  console.log(currentDay)
+  // console.log(currentDay)
 
   useFocusEffect(
     useCallback(() => {
@@ -92,76 +93,111 @@ export default function Home() {
     return !completedObj[currentDay];
   });
 
-  console.log('Filtered Habits - ', filteredHabits)
+  // console.log('Filtered Habits - ', filteredHabits)
+
+  const deletehabit = async () => {
+    try {
+      const habitId = selectedHabit?._id;
+      console.log("deleted Habit id - ", habitId);
+      const response = await axios.delete(`http://192.168.29.24:3000/create-habit/${habitId}`);
+
+      if (response.status===200) {
+        setHabits(response.data);
+      }
+           console.log("Habit id - ", response.data);
+    } catch (error) {
+    Alert.alert(error.message);
+    }
+  }
   return (
     <GestureHandlerRootView>
       <WrapperWithGradient>
-      <View style={styles.iconContainer}>
-        <Ionicons name='logo-foursquare' size={24} color={COLORS.white} />
-        <Text style={styles.text}>Habit Tracking App</Text>
-        <AntDesign name='plus' size={24} color={COLORS.white} onPress={createHabit} />
-      </View>
-      <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-
-        <View style={styles.buttonContainer}>
-          <TextButton
-            title='Today'
-            backgroundColor={option === "Today" ? COLORS.primary : COLORS.gray300}
-            onPress={() => setOption('Today')}
-            textStyle={styles.textButton}
-          />
-          <TextButton
-            title='Weekly'
-            backgroundColor={option === "Weekly" ? COLORS.secondary : COLORS.gray300}
-            onPress={() => setOption('Weekly')}
-            textStyle={styles.textButton}
-          />
-          <TextButton
-            title='Overall'
-            backgroundColor={option === "Overall" ? COLORS.success : COLORS.gray300}
-            onPress={() => setOption('Overall')}
-            textStyle={styles.textButton}
-          />
+        <View style={styles.iconContainer}>
+          <Ionicons name='logo-foursquare' size={24} color={COLORS.white} />
+          <Text style={styles.text}>Habit Tracking App</Text>
+          <AntDesign name='plus' size={24} color={COLORS.white} onPress={createHabit} />
         </View>
+        <View style={{ flex: 1, backgroundColor: COLORS.white }}>
 
-        {/* Habits list */}
-        {option === "Today" && <Text style={{textAlign:'center', fontSize: scale(14), marginTop: scale(10)}}>Today scheduled Habits</Text>}
-        {option === "Weekly" && <Text style={{textAlign:'center', fontSize: scale(14), marginTop: scale(10)}}>Weekly scheduled Habits</Text>}
-
-        {option === "Today" && (filteredHabits.length > 0 ? (
-          <ScrollView contentContainerStyle={styles.habitsContainer} showsVerticalScrollIndicator={false}>
-            {filteredHabits.map((habit) => (
-              <TextButton
-                key={habit._id}
-                title={habit.title}
-                style={styles.habitStyle}
-                backgroundColor={habit.color || COLORS.secondary}
-                onPress={() => handleHabitPress(habit)}
-              />
-            ))}
-          </ScrollView>
-        ) : (
-          <View style={styles.noHabitContainer}>
-            <Image
-              style={{ width: 60, height: 60, resizeMode: 'contain' }}
-              source={require('../../assets/icons/empty.png')}
+          <View style={styles.buttonContainer}>
+            <TextButton
+              title='Today'
+              backgroundColor={option === "Today" ? COLORS.primary : COLORS.gray300}
+              onPress={() => setOption('Today')}
+              textStyle={styles.textButton}
             />
-            <Text style={styles.noHabitsText}>No habits scheduled today</Text>
+            <TextButton
+              title='Weekly'
+              backgroundColor={option === "Weekly" ? COLORS.secondary : COLORS.gray300}
+              onPress={() => setOption('Weekly')}
+              textStyle={styles.textButton}
+            />
+            <TextButton
+              title='Overall'
+              backgroundColor={option === "Overall" ? COLORS.success : COLORS.gray300}
+              onPress={() => setOption('Overall')}
+              textStyle={styles.textButton}
+            />
           </View>
-        ))}
 
-        {option === "Weekly" && (
-          <ScrollView contentContainerStyle={styles.habitsContainer} showsVerticalScrollIndicator={false}>
-            {habits.map((habit) => (
-              <Pressable key={habit?._id} style={[styles.weeklyHabitStyle, { backgroundColor: habit.color ? habit.color : COLORS.secondary }]}>
-                <Text style={styles.weeklyHabitTitle}>{habit.title}</Text>
-                <Text style={styles.weeklyHabitRepeat}>{habit.repeatMode}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        )}
+          {/* Habits list */}
+          {option === "Today" && <Text style={{ textAlign: 'center', fontSize: scale(14), marginTop: scale(10) }}>Today scheduled Habits</Text>}
+          {option === "Weekly" && <Text style={{ textAlign: 'center', fontSize: scale(14), marginTop: scale(10) }}>Weekly scheduled Habits</Text>}
 
-      </View>
+          {option === "Today" && (filteredHabits.length > 0 ? (
+            <ScrollView contentContainerStyle={styles.habitsContainer} showsVerticalScrollIndicator={false}>
+              {filteredHabits.map((habit) => (
+                <TextButton
+                  key={habit._id}
+                  title={habit.title}
+                  style={styles.habitStyle}
+                  backgroundColor={habit.color || COLORS.secondary}
+                  onPress={() => handleHabitPress(habit)}
+                />
+              ))}
+            </ScrollView>
+          ) : (
+            <View style={styles.noHabitContainer}>
+              <Image
+                style={{ width: 60, height: 60, resizeMode: 'contain' }}
+                source={require('../../assets/icons/empty.png')}
+              />
+              <Text style={styles.noHabitsText}>No habits scheduled today</Text>
+            </View>
+          ))}
+
+          {option === "Weekly" && (
+            <ScrollView contentContainerStyle={styles.habitsContainer} showsVerticalScrollIndicator={false}>
+              {habits.map((habit) => (
+                <Pressable key={habit?._id} style={[styles.weeklyHabitStyle, { backgroundColor: habit.color ? habit.color : COLORS.secondary }]}>
+
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={styles.weeklyHabitTitle}>{habit.title}</Text>
+                    <Text style={styles.weeklyHabitRepeat}>{habit.repeatMode}</Text>
+                  </View>
+
+                  <View style={styles.daysContainer}>
+                    {longDays.map((day, index) => {
+                      const isCompleted = !!habit.completed?.[day];
+                      return (
+                        <Pressable key={index} style={{ alignItems: 'center', flexDirection: 'column' }}>
+                          <Text style={{ color: day === currentDay ? 'red' : "white" , fontWeight: '800', fontSize: 12}}>{day[0]}</Text> 
+                          {isCompleted ? (
+                            <FontAwesome name='circle' color={COLORS.white} size={24} style={{marginTop: scale(10)}}/>
+                          ) : (
+                            <Feather name='circle' color={COLORS.white} size={24} style={{marginTop: scale(10)}}/>
+                          )}
+                        </Pressable>
+                      );
+                    })}
+                  </View>
+
+                </Pressable>
+              ))}
+            </ScrollView>
+          )}
+
+        </View>
       </WrapperWithGradient>
       {/* Bottom Sheet */}
       <BottomSheet
@@ -196,7 +232,7 @@ export default function Home() {
                 <Text> Archive</Text>
               </Pressable>
 
-              <Pressable style={styles.bottomSheetOption} onPress={handleCompletionOfHabit}>
+              <Pressable style={styles.bottomSheetOption} onPress={deletehabit}>
                 <MaterialIcons name="delete-outline" size={24} color="black" />
                 <Text> Delete</Text>
               </Pressable>
@@ -205,7 +241,6 @@ export default function Home() {
         </BottomSheetView>
       </BottomSheet>
 
-      {/* {loading && <Loader visible={loading} />} */}
     </GestureHandlerRootView>
 
   );
@@ -231,7 +266,7 @@ const styles = StyleSheet.create({
     marginVertical: scale(10),
   },
   text: {
-    fontSize: Platform.OS ==='android' ? scale(20) : scale(16),
+    fontSize: Platform.OS === 'android' ? scale(20) : scale(16),
     fontWeight: '600',
     textAlign: 'center',
     color: COLORS.white
@@ -260,8 +295,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   weeklyHabitStyle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginVertical: scale(5),
     marginHorizontal: scale(15),
     borderRadius: scale(25),
@@ -277,6 +310,12 @@ const styles = StyleSheet.create({
     fontSize: scale(12),
     fontWeight: '500',
     color: COLORS.white
+  },
+  daysContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: scale(10),
   }
 
 });
