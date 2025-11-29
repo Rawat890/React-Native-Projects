@@ -71,3 +71,14 @@ app.put("/create-habit/:habitId/completed", async (req, res) => {
     res.status(500).json({error: "Error occured while updating habit completion"});
   }
 });
+
+
+app.delete("/create-habit/:habitId", async (req, res) => {
+  try {
+    const {habitId}= req.params;
+    await Habit.findByIdAndDelete(habitId);
+    res.status(200).json({message:"Habit deleted successfully"});
+  } catch (error) {
+    res.status(500).json({error: "Error occured while deleting habit"});
+  }
+})
