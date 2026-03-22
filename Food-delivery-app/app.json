@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "chatting-application",
-    "slug": "chatting-application",
+    "name": "food-delivery-app",
+    "slug": "food-delivery-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
