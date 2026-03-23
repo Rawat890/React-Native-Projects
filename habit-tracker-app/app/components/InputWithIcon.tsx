@@ -1,13 +1,13 @@
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
-  View,
-  TextInput,
-  Text,
   StyleSheet,
+  Text,
+  TextInput,
   TextInputProps,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { scale } from 'react-native-size-matters';
 import { COLORS } from '../utils/colors';
 
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     left: scale(10),
     top: scale(8),
     marginBottom:10,
-    fontSize: scale(10),
+    fontSize: scale(12),
     color: 'gray',
     zIndex: 1,
   },
@@ -108,8 +108,9 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: scale(12),
+    fontSize: scale(16),
     color: COLORS.black,
+    fontWeight: '500',
     marginTop: scale(8),
   },
   charCount: {
