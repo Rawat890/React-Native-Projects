@@ -51,8 +51,10 @@ export default function CreateHabit({route}) {
     <WrapperWithGradient>
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
+        <View style={styles.header}>
         <Ionicons name='arrow-back' size={24} color={COLORS.black} onPress={navigateBack} />
         <Text style={styles.normalText}>Create Habit</Text>
+        </View>
 
         <View style={styles.input}>
           <InputWithIcon
@@ -155,7 +157,13 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   normalText: {
-    fontSize: scale(14),
-    fontWeight: '400',
+    fontSize: scale(18),
+    fontWeight: '800',
+  },
+  header:{
+    flexDirection:'row',
+    padding: scale(10),
+    gap: scale(10),
+    alignItems:'center'
   }
 })
