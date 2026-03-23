@@ -1,18 +1,18 @@
-import {
-  View,
-  Text,
-  GestureResponderEvent,
-  ViewStyle,
-  TextStyle,
-  Animated,
-  Pressable,
-  ActivityIndicator,
-  StyleSheet,
-  Platform,
-} from "react-native";
 import React, { ReactNode, useRef } from "react";
-import { COLORS } from "../utils/colors";
+import {
+  ActivityIndicator,
+  Animated,
+  GestureResponderEvent,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 import { scale } from "react-native-size-matters";
+import { COLORS } from "../utils/colors";
 
 interface TextButtonProps {
   title?: string;
@@ -109,7 +109,7 @@ export default TextButton;
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: scale(8),
+    paddingVertical: scale(16),
     paddingHorizontal: scale(20),
     borderRadius: scale(12),
     justifyContent: "center",

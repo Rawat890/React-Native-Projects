@@ -1,6 +1,6 @@
+import { LinearGradient } from "expo-linear-gradient";
 import React, { ReactNode } from "react";
 import { StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../utils/colors";
 
