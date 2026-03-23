@@ -1,17 +1,17 @@
-import { View, Text, StyleSheet, Alert, Image, Pressable, ScrollView, Platform } from 'react-native';
-import React, { useCallback, useRef, useState } from 'react';
-import { AntDesign, Ionicons, MaterialIcons, FontAwesome, Octicons, FontAwesome6, Feather } from '@expo/vector-icons';
-import { COLORS } from '../utils/colors';
-import TextButton from '../components/TextButton';
-import { scale } from 'react-native-size-matters';
-import { SCREENS } from '../utils/routes';
-import { navigate } from '../utils/navigationService';
-import axios from 'axios';
+import { AntDesign, Feather, FontAwesome, FontAwesome6, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
+import React, { useCallback, useRef, useState } from 'react';
+import { Alert, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { scale } from 'react-native-size-matters';
+import TextButton from '../components/TextButton';
 import WrapperWithGradient from '../components/WrapperWithGradient';
-import { days, longDays } from '../utils/others';
+import { COLORS } from '../utils/colors';
+import { navigate } from '../utils/navigationService';
+import { longDays } from '../utils/others';
+import { SCREENS } from '../utils/routes';
 
 export default function Home() {
   const [option, setOption] = useState('Today');
@@ -37,7 +37,7 @@ export default function Home() {
   const fetchHabitsList = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://192.168.29.24:3000/habitsList`);
+      const response = await axios.get(`http://10.12.178.201:3000/habitsList`);
       await wait(1000);
       if (response.status === 200) {
         setHabits(response.data);
@@ -75,7 +75,7 @@ export default function Home() {
         [currentDay]: true,
       }
 
-      await axios.put(`http://192.168.29.24:3000/create-habit/${habitId}/completed`, {
+      await axios.put(`http://10.12.178.201:3000/habits/${habitId}/completed`, {
         completed: updatedCompletion,
       })
       bottomSheetRef.current?.close();
@@ -99,7 +99,7 @@ export default function Home() {
     try {
       const habitId = selectedHabit?._id;
       console.log("deleted Habit id - ", habitId);
-      const response = await axios.delete(`http://192.168.29.24:3000/create-habit/${habitId}`);
+      const response = await axios.delete(`http://10.12.178.201:3000/habits/${habitId}`);
 
       if (response.status===200) {
         setHabits(response.data);

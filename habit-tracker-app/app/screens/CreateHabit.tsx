@@ -1,14 +1,14 @@
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
-import React, { useState } from 'react'
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons'
-import { COLORS, habitColors } from '../utils/colors'
-import InputWithIcon from '../components/InputWithIcon'
-import { scale } from 'react-native-size-matters'
-import TextButton from '../components/TextButton'
-import { days } from '../utils/others'
 import axios from 'axios'
-import { goBack } from '../utils/navigationService'
+import React, { useState } from 'react'
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { scale } from 'react-native-size-matters'
+import InputWithIcon from '../components/InputWithIcon'
+import TextButton from '../components/TextButton'
 import WrapperWithGradient from '../components/WrapperWithGradient'
+import { COLORS, habitColors } from '../utils/colors'
+import { goBack } from '../utils/navigationService'
+import { days } from '../utils/others'
 
 export default function CreateHabit({route}) {
   const [selectedColor, setSelectedColor] = useState("");
@@ -28,7 +28,7 @@ export default function CreateHabit({route}) {
         reminder: true,
       }
 
-      const response = await axios.post("http://192.168.29.24:3000/create-habit", habitDetails);
+      const response = await axios.post("http://10.12.178.201:3000/habits", habitDetails);
 
       if (response.status === 200) {
         setTitle("");

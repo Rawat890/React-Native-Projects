@@ -22,7 +22,7 @@ app.listen(port, ()=>{
 //endpoint to create a habit in backend
 
 const Habit = require("./modals/habit")
-app.post("/create-habit", async (req, res) => {
+app.post("/habits", async (req, res) => {
   try {
     const {title, color, repeatMode, reminder} = req.body;
 
@@ -52,7 +52,7 @@ app.get("/habitsList", async (req, res) => {
   }
 });
 
-app.put("/create-habit/:habitId/completed", async (req, res) => {
+app.put("/habits/:habitId/completed", async (req, res) => {
   const habitId = req.params.habitId;
   const updatedCompletion = req.body.completed;
   try {
@@ -73,7 +73,7 @@ app.put("/create-habit/:habitId/completed", async (req, res) => {
 });
 
 
-app.delete("/create-habit/:habitId", async (req, res) => {
+app.delete("/habits/:habitId", async (req, res) => {
   try {
     const {habitId}= req.params;
     await Habit.findByIdAndDelete(habitId);
