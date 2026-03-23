@@ -6,6 +6,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Alert, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { scale } from 'react-native-size-matters';
+import Loader from '../components/Loader'; // Import the Loader component
 import TextButton from '../components/TextButton';
 import WrapperWithGradient from '../components/WrapperWithGradient';
 import { COLORS } from '../utils/colors';
@@ -19,12 +20,11 @@ export default function Home() {
   const [selectedHabit, setSelectedHabit] = useState(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loaderText, setLoaderText] = useState<string>('Loading...'); // For dynamic loader text
 
   const currentDay = new Date().toLocaleDateString("en-US", {
     weekday: 'short'
   }).slice(0, 3)
-
-  // console.log(currentDay)
 
   useFocusEffect(
     useCallback(() => {
@@ -32,20 +32,21 @@ export default function Home() {
     }, [])
   );
 
-  const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
   const fetchHabitsList = async () => {
     try {
+      setLoaderText('Fetching habits...');
       setLoading(true);
       const response = await axios.get(`http://10.12.178.201:3000/habitsList`);
-      await wait(1000);
       if (response.status === 200) {
-        setHabits(response.data);
+        setHabits(Array.isArray(response.data) ? response.data : []);
+      } else {
+        setHabits([]);
       }
     } catch (error) {
+      console.error("Error fetching habits:", error);
       Alert.alert("Error", "Failed to fetch the habits list.");
-    }
-    finally {
+      setHabits([]);
+    } finally {
       setLoading(false);
     }
   };
@@ -69,6 +70,9 @@ export default function Home() {
 
   const handleCompletionOfHabit = async () => {
     try {
+      setLoaderText('Marking habit as completed...');
+      setLoading(true);
+      
       const habitId = selectedHabit?._id;
       const updatedCompletion = {
         ...selectedHabit?.completed,
@@ -78,40 +82,124 @@ export default function Home() {
       await axios.put(`http://10.12.178.201:3000/habits/${habitId}/completed`, {
         completed: updatedCompletion,
       })
+      
       bottomSheetRef.current?.close();
       await fetchHabitsList();
-
+      
+      Alert.alert("Success", "Habit marked as completed!");
     } catch (error) {
-      Alert.alert("Failed to mark habit as completed, Please try again later.")
+      console.error("Error completing habit:", error);
+      Alert.alert("Error", "Failed to mark habit as completed. Please try again later.")
       bottomSheetRef.current?.close();
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  //fetch habits that are not completed for today
-  const filteredHabits = habits?.filter((habit) => {
-    const completedObj = habit.completed || {};
-    return !completedObj[currentDay];
-  });
+  const handleSkipHabit = async () => {
+    try {
+      setLoaderText('Skipping habit...');
+      setLoading(true);
+      
+      const habitId = selectedHabit?._id;
+      const updatedCompletion = {
+        ...selectedHabit?.completed,
+        [currentDay]: false, // Mark as skipped/completed false
+      }
 
-  // console.log('Filtered Habits - ', filteredHabits)
+      await axios.put(`http://10.12.178.201:3000/habits/${habitId}/completed`, {
+        completed: updatedCompletion,
+      })
+      
+      bottomSheetRef.current?.close();
+      await fetchHabitsList();
+      
+      Alert.alert("Success", "Habit skipped for today");
+    } catch (error) {
+      console.error("Error skipping habit:", error);
+      Alert.alert("Error", "Failed to skip habit. Please try again later.")
+      bottomSheetRef.current?.close();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditHabit = () => {
+    bottomSheetRef.current?.close();
+    // Navigate to edit screen with habit data
+    navigate(SCREENS.CreateHabit, { 
+      habit: selectedHabit, 
+      onHabitAdded: fetchHabitsList 
+    });
+  };
+
+  const handleArchiveHabit = async () => {
+    try {
+      setLoaderText('Archiving habit...');
+      setLoading(true);
+      
+      const habitId = selectedHabit?._id;
+      const response = await axios.put(`http://10.12.178.201:3000/habits/${habitId}/archive`, {
+        isArchived: true,
+      })
+      
+      if (response.status === 200) {
+        bottomSheetRef.current?.close();
+        setSelectedHabit(null);
+        await fetchHabitsList();
+        Alert.alert("Success", "Habit archived successfully");
+      }
+    } catch (error) {
+      console.error("Error archiving habit:", error);
+      Alert.alert("Error", "Failed to archive habit. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const deletehabit = async () => {
     try {
+      setLoaderText('Deleting habit...');
+      setLoading(true);
+      
       const habitId = selectedHabit?._id;
       console.log("deleted Habit id - ", habitId);
+      
       const response = await axios.delete(`http://10.12.178.201:3000/habits/${habitId}`);
 
-      if (response.status===200) {
-        setHabits(response.data);
+      if (response.status === 200) {
+        console.log("Habit deleted successfully - ", response.data);
+        
+        bottomSheetRef.current?.close();
+        setSelectedHabit(null);
+        await fetchHabitsList();
+        
+        Alert.alert("Success", "Habit deleted successfully");
       }
-           console.log("Habit id - ", response.data);
     } catch (error) {
-    Alert.alert(error.message);
+      console.error("Error deleting habit:", error);
+      Alert.alert("Error", error.message || "Failed to delete habit. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
+
+  const filteredHabits = Array.isArray(habits) ? habits.filter((habit) => {
+    const completedObj = habit.completed || {};
+    return !completedObj[currentDay];
+  }) : [];
+
   return (
     <GestureHandlerRootView>
       <WrapperWithGradient>
+        {/* Loader Component */}
+        <Loader 
+          visible={loading} 
+          text={loaderText}
+          color={COLORS.primary}
+          backgroundColor="rgba(0,0,0,0.5)"
+        />
+        
         <View style={styles.iconContainer}>
           <Ionicons name='logo-foursquare' size={24} color={COLORS.white} />
           <Text style={styles.text}>Habit Tracking App</Text>
@@ -168,7 +256,7 @@ export default function Home() {
 
           {option === "Weekly" && (
             <ScrollView contentContainerStyle={styles.habitsContainer} showsVerticalScrollIndicator={false}>
-              {habits.map((habit) => (
+              {Array.isArray(habits) && habits.map((habit) => (
                 <Pressable key={habit?._id} style={[styles.weeklyHabitStyle, { backgroundColor: habit.color ? habit.color : COLORS.secondary }]}>
 
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -178,14 +266,14 @@ export default function Home() {
 
                   <View style={styles.daysContainer}>
                     {longDays.map((day, index) => {
-                      const isCompleted = !!habit.completed?.[day];
+                      const isCompleted = habit.completed && habit.completed[day];
                       return (
                         <Pressable key={index} style={{ alignItems: 'center', flexDirection: 'column' }}>
-                          <Text style={{ color: day === currentDay ? 'red' : "white" , fontWeight: '800', fontSize: 12}}>{day[0]}</Text> 
+                          <Text style={{ color: day === currentDay ? 'red' : "white", fontWeight: '800', fontSize: 12 }}>{day[0]}</Text> 
                           {isCompleted ? (
-                            <FontAwesome name='circle' color={COLORS.white} size={24} style={{marginTop: scale(10)}}/>
+                            <FontAwesome name='circle' color={COLORS.white} size={24} style={{ marginTop: scale(10) }} />
                           ) : (
-                            <Feather name='circle' color={COLORS.white} size={24} style={{marginTop: scale(10)}}/>
+                            <Feather name='circle' color={COLORS.white} size={24} style={{ marginTop: scale(10) }} />
                           )}
                         </Pressable>
                       );
@@ -199,50 +287,50 @@ export default function Home() {
 
         </View>
       </WrapperWithGradient>
+      
       {/* Bottom Sheet */}
       <BottomSheet
         ref={bottomSheetRef}
-        index={-1} // initially hidden
-        snapPoints={[scale(250)]}
+        index={-1}
+        snapPoints={[scale(280)]}
         enablePanDownToClose={true}
         onChange={handleSheetChanges}
       >
         <BottomSheetView style={{ padding: scale(20) }}>
           {selectedHabit ? (
             <>
-              <Text style={{ marginVertical: scale(5), fontWeight: '500' }}>Options</Text>
+              <Text style={{ marginVertical: scale(5), fontWeight: '500', fontSize: scale(16) }}>Options for "{selectedHabit.title}"</Text>
+              <View style={styles.divider} />
 
               <Pressable style={styles.bottomSheetOption} onPress={handleCompletionOfHabit}>
-                <Octicons name="tracked-by-closed-completed" size={24} color="black" />
-                <Text> Completed</Text>
+                <Octicons name="tracked-by-closed-completed" size={24} color={COLORS.success} />
+                <Text style={styles.optionText}> Mark as Completed</Text>
               </Pressable>
 
-              <Pressable style={styles.bottomSheetOption} onPress={handleCompletionOfHabit}>
-                <Ionicons name="play-skip-forward-circle-outline" size={24} color="black" />
-                <Text> Skip</Text>
+              <Pressable style={styles.bottomSheetOption} onPress={handleSkipHabit}>
+                <Ionicons name="play-skip-forward-circle-outline" size={24} color={COLORS.warning} />
+                <Text style={styles.optionText}> Skip for Today</Text>
               </Pressable>
 
-              <Pressable style={styles.bottomSheetOption} onPress={handleCompletionOfHabit}>
-                <FontAwesome name="edit" size={24} color="black" />
-                <Text> Edit</Text>
+              <Pressable style={styles.bottomSheetOption} onPress={handleEditHabit}>
+                <FontAwesome name="edit" size={24} color={COLORS.primary} />
+                <Text style={styles.optionText}> Edit Habit</Text>
               </Pressable>
 
-              <Pressable style={styles.bottomSheetOption} onPress={handleCompletionOfHabit}>
-                <FontAwesome6 name="file-archive" size={24} color="black" />
-                <Text> Archive</Text>
+              <Pressable style={styles.bottomSheetOption} onPress={handleArchiveHabit}>
+                <FontAwesome6 name="file-archive" size={24} color={COLORS.secondary} />
+                <Text style={styles.optionText}> Archive Habit</Text>
               </Pressable>
 
               <Pressable style={styles.bottomSheetOption} onPress={deletehabit}>
-                <MaterialIcons name="delete-outline" size={24} color="black" />
-                <Text> Delete</Text>
+                <MaterialIcons name="delete-outline" size={24} color={COLORS.danger} />
+                <Text style={[styles.optionText, { color: COLORS.danger }]}> Delete Habit</Text>
               </Pressable>
             </>
           ) : null}
         </BottomSheetView>
       </BottomSheet>
-
     </GestureHandlerRootView>
-
   );
 }
 
@@ -251,7 +339,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: COLORS.success,
-    padding: scale(10),
+    marginVertical: scale(16),
+    marginHorizontal: scale(16),
     alignItems: 'center',
   },
   buttonContainer: {
@@ -290,9 +379,23 @@ const styles = StyleSheet.create({
   },
   bottomSheetOption: {
     flexDirection: 'row',
-    gap: scale(10),
-    marginVertical: scale(5),
+    gap: scale(12),
+    marginVertical: scale(8),
     alignItems: 'center',
+    paddingVertical: scale(8),
+    paddingHorizontal: scale(12),
+    borderRadius: scale(10),
+    backgroundColor: COLORS.gray100,
+  },
+  optionText: {
+    fontSize: scale(14),
+    fontWeight: '500',
+    color: COLORS.black,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: COLORS.gray300,
+    marginVertical: scale(10),
   },
   weeklyHabitStyle: {
     marginVertical: scale(5),
@@ -317,5 +420,4 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: scale(10),
   }
-
 });
