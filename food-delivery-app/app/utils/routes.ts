@@ -1,4 +1,6 @@
-export const SCREENS = {
+const SCREENS = {
   Home: "HomeScreen",
   Restaurant: "RestaurantScreen",
 };
+
+export default SCREENS;
