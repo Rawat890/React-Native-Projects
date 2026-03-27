@@ -16,6 +16,7 @@ import { SCREENS } from '../utils/routes';
 function HabitCard({ habit, onPress, index }) {
   const scale_anim = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
+  console.log("Habit is. - " , habit)
 
   useEffect(() => {
     Animated.parallel([
@@ -41,6 +42,16 @@ function HabitCard({ habit, onPress, index }) {
   const onPressOut = () =>
     Animated.spring(pressScale, { toValue: 1, useNativeDriver: true, speed: 40 }).start();
 
+const formattedDate = (date: string) => {
+  const d = new Date(date);
+
+  return d.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
   return (
     <Animated.View
       style={{
@@ -54,8 +65,13 @@ function HabitCard({ habit, onPress, index }) {
         onPressOut={onPressOut}
         style={[styles.habitCard, { borderLeftColor: habit.color || COLORS.accent }]}
       >
+        <View style={styles.habitView}>
         <View style={[styles.habitDot, { backgroundColor: habit.color || COLORS.accent }]} />
+        <View style={styles.habitDetail}>
         <Text style={styles.habitCardTitle} numberOfLines={1}>{habit.title}</Text>
+        <Text style={styles.habitCardDate} numberOfLines={1}>{formattedDate(habit.createAt)}</Text>
+        </View>
+        </View>
         <View style={[styles.habitArrow]}>
           <AntDesign name="right" size={12} color={COLORS.muted} />
         </View>
@@ -135,7 +151,7 @@ function TabPill({ title, active, color, onPress }) {
             : { backgroundColor: COLORS.surface, borderColor: COLORS.border },
         ]}
       >
-        <Text style={[styles.tabPillText, active ? { color: COLORS.white } : { color: COLORS.muted }]}>
+        <Text style={[styles.tabPillText, active ? { color: COLORS.black } : { color: COLORS.black }]}>
           {title}
         </Text>
       </Pressable>
@@ -179,9 +195,10 @@ export default function Home() {
     try {
       setLoaderText('Fetching habits...');
       setLoading(true);
-      const response = await axios.get(`http://10.12.178.201:3000/habitsList`);
+      const response = await axios.get(`http://192.168.1.23:3000/habitsList`);
       setHabits(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
+      console.log("Error is - ", error)
       Alert.alert('Error', 'Failed to fetch the habits list.');
       setHabits([]);
     } finally {
@@ -210,7 +227,7 @@ export default function Home() {
       setLoading(true);
       const habitId = selectedHabit?._id;
       const updatedCompletion = { ...selectedHabit?.completed, [currentDay]: true };
-      await axios.put(`http://10.12.178.201:3000/habits/${habitId}/completed`, { completed: updatedCompletion });
+      await axios.put(`http://192.168.1.23:3000/habits/${habitId}/completed`, { completed: updatedCompletion });
       bottomSheetRef.current?.close();
       await fetchHabitsList();
       Alert.alert('Success', 'Habit marked as completed!');
@@ -226,7 +243,7 @@ export default function Home() {
       setLoading(true);
       const habitId = selectedHabit?._id;
       const updatedCompletion = { ...selectedHabit?.completed, [currentDay]: false };
-      await axios.put(`http://10.12.178.201:3000/habits/${habitId}/completed`, { completed: updatedCompletion });
+      await axios.put(`http://192.168.1.23:3000/habits/${habitId}/completed`, { completed: updatedCompletion });
       bottomSheetRef.current?.close();
       await fetchHabitsList();
       Alert.alert('Success', 'Habit skipped for today');
@@ -246,7 +263,7 @@ export default function Home() {
       setLoaderText('Archiving habit...');
       setLoading(true);
       const habitId = selectedHabit?._id;
-      const response = await axios.put(`http://10.12.178.201:3000/habits/${habitId}/archive`, { isArchived: true });
+      const response = await axios.put(`http://192.168.1.23:3000/habits/${habitId}/archive`, { isArchived: true });
       if (response.status === 200) {
         bottomSheetRef.current?.close();
         setSelectedHabit(null);
@@ -263,7 +280,7 @@ export default function Home() {
       setLoaderText('Deleting habit...');
       setLoading(true);
       const habitId = selectedHabit?._id;
-      const response = await axios.delete(`http://10.12.178.201:3000/habits/${habitId}`);
+      const response = await axios.delete(`http://192.168.1.23:3000/habits/${habitId}`);
       if (response.status === 200) {
         bottomSheetRef.current?.close();
         setSelectedHabit(null);
@@ -544,6 +561,7 @@ const styles = StyleSheet.create({
   habitCard: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent:'space-between',
     backgroundColor: COLORS.surface,
     borderRadius: scale(14),
     borderWidth: 1,
@@ -560,9 +578,21 @@ const styles = StyleSheet.create({
   },
   habitCardTitle: {
     flex: 1,
-    fontSize: scale(14),
+    fontSize: scale(16),
     fontWeight: '600',
-    color: COLORS.text,
+    color: COLORS.white,
+  },
+  habitCardRepeat: {
+    flex: 1,
+    fontSize: scale(12),
+    fontWeight: '600',
+    color: COLORS.white,
+  },
+  habitCardDate: {
+    flex: 1,
+    fontSize: scale(12),
+    fontWeight: '600',
+    color: COLORS.white,
   },
   habitArrow: {
     width: scale(24),
@@ -699,4 +729,12 @@ const styles = StyleSheet.create({
     fontSize: scale(14),
     fontWeight: '500',
   },
+  habitDetail:{
+    flexDirection: 'column'
+  },
+  habitView:{
+    flexDirection: 'row',
+    alignItems:'center',
+    gap: scale(15)
+  }
 });
