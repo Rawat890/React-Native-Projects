@@ -59,6 +59,7 @@ const InputWithIcon: React.FC<InputWithIconProps> = ({
           secureTextEntry={secureTextEntry && !showPassword}
           keyboardType={keyboardType}
           maxLength={maxLength}
+          placeholderTextColor={COLORS.white}
           {...rest}
         />
         {secureTextEntry && (
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: scale(16),
-    color: COLORS.black,
+    color: COLORS.white,
     fontWeight: '500',
     marginTop: scale(8),
   },
