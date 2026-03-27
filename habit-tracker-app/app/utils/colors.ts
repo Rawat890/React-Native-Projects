@@ -6,7 +6,6 @@ export const COLORS = {
   white: "#FFFFFF",
   black: "#000000",
 
-  // Grays
   gray100: "#F5F5F5",
   gray200: "#E0E0E0",
   gray300: "#C2C2C2",
@@ -14,25 +13,35 @@ export const COLORS = {
   gray500: "#757575",
   gray600: "#616161",
 
-  // Status
   success: "#4CAF50",
   warning: "#FFC107",
   error: "#F44336",
   disabled: "#AAB4BE",
 
-  // Transparent
   transparent: "transparent",
-}as const;
+  bg: "#0d0d0f",
+  surface: "#16161a",
+  border: "#26262e",
+  accent: "#a78bfa",
+  accentSoft: "#a78bfa18",
+  muted: "#6b6a7e",
+  dim: "#3a3a46",
+  green: "#34d399",
+  greenSoft: "#34d39920",
+  orange: "#fb923c",
+  orangeSoft: "#fb923c20",
+  danger: "#f87171",
+  dangerSoft: "#f8717115",
+} as const;
 
-export type ColorKeys = keyof typeof Colors;
-export type ColorValue = (typeof Colors)[ColorKeys];
+export type ColorKeys = keyof typeof COLORS;
+export type ColorValue = (typeof COLORS)[ColorKeys];
 
-
-export const habitColors = [ 
-    "#FF5733",
-    "#FFD700",
-    "#5D76A9",
-    "#1877F2",
-    "#CCCCFF",
-    "#4169E1",
-  ]
+export const habitColors = [
+  "#FF5733",
+  "#FFD700",
+  "#5D76A9",
+  "#1877F2",
+  "#CCCCFF",
+  "#4169E1",
+];
