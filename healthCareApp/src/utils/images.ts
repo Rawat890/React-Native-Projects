@@ -1,0 +1,10 @@
+export const lockIcon = require('../assets/icons/icLock.png');
+export const passwordIcon = require('../assets/icons/icLock.png');
+export const arrowRightIcon = require('../assets/icons/icLock.png');
+export const logoIcon = require('../assets/icons/icLock.png');
+export const homeActiveIcon = require('../assets/icons/icLock.png');
+export const homeInactiveIcon = require('../assets/icons/icLock.png');
+export const messageActiveIcon = require('../assets/icons/icLock.png');
+export const messageInactiveIcon = require('../assets/icons/icLock.png');
+export const emailIcon = require('../assets/icons/icLock.png');
+export const calendarIcon = require('../assets/icons/icLock.png');
