@@ -2,6 +2,26 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/assets/fonts/BalooThambi2-Bold.ttf",
+      "sha1": "4b4a33f5c45f60c5b240c0ae73542df239d9179b"
+    },
+    {
+      "path": "src/assets/fonts/BalooThambi2-ExtraBold.ttf",
+      "sha1": "0313a9e8f5538e5eb1c4a07b750115b1ac1f5b5e"
+    },
+    {
+      "path": "src/assets/fonts/BalooThambi2-Medium.ttf",
+      "sha1": "34afdc930f535b1819346866fb7c496b58504f5f"
+    },
+    {
+      "path": "src/assets/fonts/BalooThambi2-Regular.ttf",
+      "sha1": "07fd2fc23039c2cf6a7653adaffb44c5ffd9de57"
+    },
+    {
+      "path": "src/assets/fonts/BalooThambi2-SemiBold.ttf",
+      "sha1": "74c111df2ea8412d2b9891257b505acf2c102e08"
+    },
+    {
       "path": "src/assets/fonts/BalooThambi2-VariableFont_wght.ttf",
       "sha1": "79469dbb053ca0176843304fdf7320cfe48090b9"
     }
