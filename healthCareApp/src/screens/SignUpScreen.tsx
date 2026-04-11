@@ -15,6 +15,7 @@ import { signupSchema } from '../utils/schemas/signUpSchema';
 import { reset } from '../utils/navigationService';
 import { scale } from 'react-native-size-matters';
 import { emailIcon, lockIcon } from '../utils/images';
+import { fonts } from '../utils/fonts';
 
 const SignUpScreen = ({ navigation }: any) => {
   const [loading, setLoading] = useState(false);
@@ -63,16 +64,18 @@ const SignUpScreen = ({ navigation }: any) => {
           )} />
 
           <Controller control={control} name="email" render={({ field: { onChange, value } }) => (
-            <InputWithLabel label="Email" placeholder="Enter email" value={value} onChangeText={onChange} secureTextEntry={false} error={errors.email?.message} keyboardType="email-address" icon={emailIcon}/>
+            <InputWithLabel label="Email" placeholder="Enter email" value={value} onChangeText={onChange} secureTextEntry={false} error={errors.email?.message} keyboardType="email-address" icon={emailIcon} />
           )} />
 
           <Controller control={control} name="password" render={({ field: { onChange, value } }) => (
-            <InputWithLabel label="Password" placeholder="Create password" value={value} onChangeText={onChange} secureTextEntry error={errors.password?.message} icon={lockIcon}/>
+            <InputWithLabel label="Password" placeholder="Create password" value={value} onChangeText={onChange} secureTextEntry error={errors.password?.message} icon={lockIcon} />
           )} />
 
           {firebaseError ? <Text style={styles.fbError}>{firebaseError}</Text> : null}
 
-          <ButtonWithLabel title="REGISTER" onPress={handleSubmit(onSubmit)} loading={loading} backgroundColor={COLORS.splash}/>
+          <View style={{ marginTop: scale(15) }}>
+            <ButtonWithLabel title="REGISTER" onPress={handleSubmit(onSubmit)} loading={loading} backgroundColor={COLORS.splash} textStyle={styles.buttonText} />
+          </View>
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(350).duration(500)} style={styles.loginRow}>
@@ -114,48 +117,48 @@ const styles = StyleSheet.create({
 
   loginLabel: {
     fontSize: scale(16),
+    fontFamily: fonts.balooExtraBold,
     fontWeight: '600',
     color: COLORS.black,
     letterSpacing: scale(2.5),
-    marginBottom: scale(6),
+    marginBottom: scale(16),
   },
-
   title: {
     fontSize: scale(36),
-    fontWeight: '800',
+    fontFamily: fonts.balooExtraBold,
     color: COLORS.black,
     letterSpacing: scale(0.3),
   },
-
   card: {
     backgroundColor: COLORS.white,
     borderRadius: scale(16),
     padding: scale(2),
   },
-
   fbError: {
     color: COLORS.danger,
     fontSize: scale(12),
     marginBottom: scale(12),
     textAlign: 'center',
   },
-
   loginRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: scale(28),
   },
-
   loginLabel2: {
     color: COLORS.black,
-    fontSize: scale(13),
-    fontWeight: '700'
+    fontSize: scale(14),
+    fontFamily: fonts.balooExtraBold,
   },
   loginLink: {
     color: COLORS.darkBlue,
-    fontSize: scale(13),
-    fontWeight: '700',
+    fontSize: scale(14),
+    fontFamily: fonts.balooExtraBold,
   },
+  buttonText: {
+    fontFamily: fonts.balooExtraBold,
+    fontSize: scale(20),
+  }
 });
 
 export default SignUpScreen;

@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   logoCircle: {
     width: scale(160),
     height: scale(160),
@@ -74,15 +73,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
-
     shadowColor: COLORS.primary,
     shadowOpacity: 0.35,
     shadowRadius: scale(20),
     shadowOffset: { width: 0, height: scale(8) },
-
     elevation: 10,
   },
-
   logoText: {
     color: COLORS.white,
     fontSize: moderateScale(15),
@@ -90,7 +86,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: scale(8),
   },
-
   appName: {
     fontSize: moderateScale(30),
     fontWeight: '800',
@@ -98,13 +93,11 @@ const styles = StyleSheet.create({
     letterSpacing: scale(0.5),
     marginBottom: scale(6),
   },
-
   tagline: {
     fontSize: moderateScale(13),
     color: COLORS.textSecondary,
     marginBottom: scale(48),
   },
-
   loaderWrapper: {
     position: 'absolute',
     bottom: scale(80),

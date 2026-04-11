@@ -15,6 +15,7 @@ import { loginSchema } from '../utils/schemas/loginSchema';
 import { reset } from '../utils/navigationService';
 import { scale } from 'react-native-size-matters';
 import { emailIcon, lockIcon } from '../utils/images';
+import { fonts } from '../utils/fonts';
 
 const LoginScreen = ({ navigation }: any) => {
   const [loading, setLoading] = useState(false);
@@ -52,7 +53,6 @@ const LoginScreen = ({ navigation }: any) => {
     <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
 
-        {/* Header */}
         <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.header}>
           <Text style={styles.loginLabel}>LOGIN</Text>
           <Text style={styles.title}>Healthcare</Text>
@@ -60,7 +60,7 @@ const LoginScreen = ({ navigation }: any) => {
 
         <Animated.View entering={FadeInUp.delay(200).duration(500)} style={styles.card}>
           <Controller control={control} name="email" render={({ field: { onChange, value } }) => (
-            <InputWithLabel label="Email" placeholder="Enter email" value={value} onChangeText={onChange} secureTextEntry={false} error={errors.email?.message} keyboardType="email-address" icon={emailIcon}/>
+            <InputWithLabel label="Email" placeholder="Enter email" value={value} onChangeText={onChange} secureTextEntry={false} error={errors.email?.message} keyboardType="email-address" icon={emailIcon} />
           )} />
 
           <Controller control={control} name="password" render={({ field: { onChange, value } }) => (
@@ -68,20 +68,21 @@ const LoginScreen = ({ navigation }: any) => {
           )} />
 
           <Pressable onPress={() => navigation.navigate('ForgotPassword')} style={styles.forgotRow}>
-            <Text style={styles.forgotText}>Forgot Password?</Text>
+            <Text style={styles.forgotText}>Forgot Password !</Text>
           </Pressable>
 
           {firebaseError ? <Text style={styles.fbError}>{firebaseError}</Text> : null}
 
-          <ButtonWithLabel title="LOGIN" onPress={handleSubmit(onSubmit)} loading={loading} backgroundColor={COLORS.splash}/>
-        </Animated.View>
+          <Animated.View entering={FadeInUp.delay(350).duration(500)} style={styles.signupRow}>
+            <Text style={styles.signupLabel}>Don't Have An Account: </Text>
+            <Pressable onPress={() => navigation.navigate('SignUp')}>
+              <Text style={styles.signupLink}>Click here to register</Text>
+            </Pressable>
+          </Animated.View>
 
-        {/* Sign up link */}
-        <Animated.View entering={FadeInUp.delay(350).duration(500)} style={styles.signupRow}>
-          <Text style={styles.signupLabel}>Don't Have An Account: </Text>
-          <Pressable onPress={() => navigation.navigate('SignUp')}>
-            <Text style={styles.signupLink}>Click here to register</Text>
-          </Pressable>
+          <View style={{ marginTop: scale(40) }}>
+            <ButtonWithLabel title="LOGIN" onPress={handleSubmit(onSubmit)} loading={loading} backgroundColor={COLORS.splash} textStyle={styles.buttonText} />
+          </View>
         </Animated.View>
 
       </ScrollView>
@@ -108,70 +109,65 @@ const styles = StyleSheet.create({
     paddingTop: scale(70),
     paddingBottom: scale(40),
   },
-
   header: {
     alignItems: 'center',
     marginBottom: scale(32),
   },
-
   loginLabel: {
     fontSize: scale(16),
-    fontWeight: '600',
+    fontFamily: fonts.balooBold,
     color: COLORS.black,
     letterSpacing: scale(2.5),
-    marginBottom: scale(6),
+    marginBottom: scale(16),
   },
-
   title: {
     fontSize: scale(36),
-    fontWeight: '800',
+    fontFamily: fonts.balooBold,
     color: COLORS.black,
     marginTop: scale(15),
     letterSpacing: scale(0.3),
   },
-
   card: {
     backgroundColor: COLORS.white,
     borderRadius: scale(16),
     padding: scale(2),
     borderColor: COLORS.black,
   },
-
   forgotRow: {
     alignItems: 'flex-end',
     marginTop: -scale(4),
     marginBottom: scale(20),
   },
-
   forgotText: {
     color: COLORS.darkBlue,
-    fontSize: scale(12),
-    fontWeight: '600'
+    fontSize: scale(14),
+    fontFamily: fonts.balooBold,
   },
-
   fbError: {
     color: COLORS.danger,
     fontSize: scale(12),
     marginBottom: scale(12),
     textAlign: 'center',
   },
-
   signupRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: scale(28),
   },
-
   signupLabel: {
     color: COLORS.black,
-    fontSize: scale(13),
-    fontWeight: '700'
+    fontSize: scale(14),
+    fontFamily: fonts.balooBold,
   },
   signupLink: {
     color: COLORS.darkBlue,
-    fontSize: scale(13),
-    fontWeight: '700',
+    fontSize: scale(14),
+    fontFamily: fonts.balooBold,
   },
+  buttonText: {
+    fontFamily: fonts.balooExtraBold,
+    fontSize: scale(20)
+  }
 });
 
 export default LoginScreen;
