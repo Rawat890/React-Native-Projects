@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   micIcon: {
     width: scale(22),
-    height: scale(22),
+    height: scale(28),
     tintColor: COLORS.textSecondary,
   },
   topTabRow: {
