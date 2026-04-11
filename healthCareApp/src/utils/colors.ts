@@ -47,5 +47,6 @@ export const COLORS = {
   mutedLight: '#94A3B8',
   blueTint: '#DBEAFE',
   splash: '#5391B4',
-  darkBlue: '#04238E'
+  darkBlue: '#04238E',
+  light: '#D1E8F0'
 };
