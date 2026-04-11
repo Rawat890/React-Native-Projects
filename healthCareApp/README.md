@@ -1,97 +1,66 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+Project: Healthcare React Native App
+Key features added -
+1. InputWithLabel Component
+Floating legend-style label that sits on the top border (like HTML <fieldset>)
+Label is absolutely positioned with top: -scale(11) to straddle the border line
+Background color behind label text "cuts through" the border visually
+Optional icon prop renders to the left of the input
+Show/Hide toggle for password fields
 
-# Getting Started
+2. WaveLoader Component
+Circular wave animation loader using React Native Reanimated
+progress % 1 modulo maps ever-growing progress value to translateX: 0 → -tileWidth
+numBumps = 6 (must be even) so alternating tall/short bump pattern tiles cleanly
+Water fill level breathes up and down using withSequence + withRepeat(-1)
+FadeIn / FadeOut on mount/unmount
+Props: size, color, secondaryColor, ringColor, backgroundColor, speed
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
-## Step 1: Start Metro
+3. HomeScreen
+Header: hamburger icon + logo image + circular mic button with border
+Upload prescription banner: horizontal layout — text left, ORDER NOW button right
+Promo card (green): "Get the Best Medical Service" with doctor image, FadeInRight animation
+Offer card (lavender): "UPTO 80% off" with vertical UPTO box, medicine image, SHOP NOW button
+Both cards have zIndex: 1 to render above the decorative strip
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+4. NearbyPharmacyTab
+Header: back arrow (goBack) + location pin icon + city name
+Pharmacy grid: 2-column layout, image fills card top, name/distance/star rating below
+Upload section: centered title + subtitle, single bordered box with two side-by-side options
+Upload File: opens document picker immediately on press (types.images, types.pdf)
+Upload Link: shows TextInput with autoFocus when selected
+uploadMode starts as null — Continue button disabled until an option is selected
+Active option highlights with COLORS.primaryLight background + primary tint on icon
+Continue button fixed at bottom (position: absolute)
+goBack fixed (was { goBack } object reference instead of function call)
 
-```sh
-# Using npm
-npm start
 
-# OR using Yarn
-yarn start
-```
+5. cloudinaryService.ts
+uploadFile: uses /auto/upload endpoint (not /upload) — supports images
+No manual Content-Type header on FormData — lets React Native auto-generate the multipart/form-data; boundary=... header
+uploadByUrl: sends Content-Type: application/json with URL as file field — FormData does not work for URL uploads on Cloudinary
+upload_preset field added — required for unsigned uploads (root cause of empty Firestore fields)
+Uses UPLOAD_PRESET = 'healthcare' (unsigned preset in Cloudinary dashboard)
+Endpoint: /auto/upload for both functions
 
-## Step 2: Build and run your app
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+6. prescriptionService.ts
+Saves prescription metadata to Firestore prescriptions collection
+Fields: id, uid, url, format, fileName, type (file | link), uploadedAt, email
+subscribe(uid, cb) — real-time Firestore listener ordered by uploadedAt desc
+Fetches records filtered by uid from authService.currentUser()?.uid
 
-### Android
+7. ReminderTab
 
-```sh
-# Using npm
-npm run android
+8 Firebase Auth handles persistence automatically. Once a user logs in, Firebase stores the auth token in the device's local storage. On every app restart, Firebase restores the session without requiring login again.
 
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Key Dependencies Used -
+<react-hook-form>
+<Yup>
+<react-native-reanimated>
+<react-native-size-matters>
+<@react-native-documents/picker>
+<firebase/firestore>
+<Cloudinary Setup Required>
+<react-native-size-matters> - for responsive design
