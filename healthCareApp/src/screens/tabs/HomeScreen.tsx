@@ -11,7 +11,10 @@ import {
   barIcon, logoIcon, medicineIcon, micIcon,
   calenderIcon, questionIcon, messageIcon,
   reminderIcon,
+  doctor,
 } from '../../utils/images';
+import ButtonWithLabel from '../../components/ButtonWithLabel';
+import { fonts } from '../../utils/fonts';
 
 const TOP_TABS = [
   { key: 'questions', label: 'Questions', icon: questionIcon },
@@ -45,8 +48,6 @@ const HomeScreen: React.FC = () => {
       </Animated.View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-
-        {/* ── Top Tab Pills ── */}
         <Animated.View entering={FadeInDown.delay(100).duration(400)} style={styles.topTabRow}>
           {TOP_TABS.map(t => {
             const active = activeTab === t.key;
@@ -75,41 +76,50 @@ const HomeScreen: React.FC = () => {
             <Text style={styles.uploadBannerSub}>
               Upload a Prescription and Tell Us What you Need. We do the Rest. !
             </Text>
+          </View>
+          <View style={styles.orderView}>
             <Text style={styles.uploadBannerOffer}>Flat 25% OFF ON MEDICINES</Text>
+            <ButtonWithLabel title='ORDER NOW' backgroundColor={COLORS.blue} onPress={() => { }} containerStyle={styles.orderBtn} textStyle={styles.orderBtnText} />
           </View>
-          <Pressable style={styles.orderBtn}>
-            <Text style={styles.orderBtnText}>ORDER NOW</Text>
-          </Pressable>
         </Animated.View>
+        <View style={styles.cardsSection}>
 
-        <Animated.View entering={FadeInRight.delay(200).duration(450)} style={styles.promoCard}>
-          <View style={styles.promoLeft}>
-            <Text style={styles.promoTagText}>Get the Best</Text>
-            <Text style={styles.promoTitle}>Medical Service</Text>
-            <Text style={styles.promoDesc}>
-              Rem illum facere quo corporis Quis in saepe itaque ut quos pariatur. Qui numquam rerum hic repudiandae rerum id amet tempore nam molestias omnis qui earum voluptatem!
-            </Text>
-          </View>
-          <Image source={medicineIcon} style={styles.promoImage} resizeMode="contain" />
-        </Animated.View>
+          <View style={styles.decorStrip} />
 
-        {/* ── Offer Card (purple/lavender) ── */}
-        <Animated.View entering={FadeInDown.delay(300).duration(400)} style={styles.offerCard}>
-          <View style={styles.offerLeft}>
-            <View style={styles.offerLabelRow}>
-              <View style={styles.uptoBox}>
-                <Text style={styles.uptoText}>U{'\n'}P{'\n'}T{'\n'}O</Text>
-              </View>
-              <Text style={styles.offerPercent}>80 %</Text>
+          <Animated.View entering={FadeInRight.delay(200).duration(450)} style={styles.promoCard}>
+            <View style={styles.promoLeft}>
+              <Text style={styles.promoTagText}>Get the Best</Text>
+              <Text style={styles.promoTitle}>Medical Service</Text>
+              <Text style={styles.promoDescription}>
+                Rem illum facere quo corporis Quis in saepe itaque ut quos pariatur. Qui numquam rerum hic repudiandae rerum id amet tempore nam molestias omnis qui earum voluptatem!
+              </Text>
             </View>
-            <Text style={styles.offerSub}>offer</Text>
-            <Text style={styles.offerDesc}>On Health Products</Text>
-            <Pressable style={styles.shopBtn}>
-              <Text style={styles.shopBtnText}>SHOP NOW</Text>
-            </Pressable>
-          </View>
-          <Image source={medicineIcon} style={styles.offerImage} resizeMode="contain" />
-        </Animated.View>
+            <Image source={doctor} style={styles.doctorImage} resizeMode="contain" />
+          </Animated.View>
+
+          <Animated.View entering={FadeInRight.delay(320).duration(450)} style={styles.offerCard}>
+            <View style={styles.offerLeft}>
+              <View style={styles.offerLabelRow}>
+                <View style={styles.uptoBox}>
+                  <Text style={[styles.uptoText, { transform: [{ rotate: '-90deg' }] }]}>O</Text>
+                  <Text style={[styles.uptoText, { transform: [{ rotate: '-90deg' }] }]}>T</Text>
+                  <Text style={[styles.uptoText, { transform: [{ rotate: '-90deg' }] }]}>P</Text>
+                  <Text style={[styles.uptoText, { transform: [{ rotate: '-90deg' }] }]}>U</Text>
+                </View>
+                <View>
+                  <Text style={styles.offerPercent}>80 %</Text>
+                  <Text style={styles.offerSub}>offer</Text>
+                </View>
+              </View>
+              <Text style={styles.offerDesc}>On Health Products</Text>
+              <Pressable style={styles.shopBtn}>
+                <Text style={styles.shopBtnText}>SHOP NOW</Text>
+              </Pressable>
+            </View>
+            <Image source={medicineIcon} style={styles.offerImage} resizeMode="contain" />
+          </Animated.View>
+
+        </View>
 
       </ScrollView>
     </View>
@@ -134,28 +144,23 @@ const styles = StyleSheet.create({
     paddingTop: scale(16),
     paddingBottom: scale(14),
   },
-
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: scale(12),
+    gap: scale(5),
   },
-
   menuBtn: {
     padding: scale(4),
   },
-
   menuIcon: {
     width: scale(24),
     height: scale(24),
     tintColor: COLORS.textSecondary,
   },
-
   logoIcon: {
     width: scale(80),
     height: scale(36),
   },
-
   micBtn: {
     width: scale(48),
     height: scale(48),
@@ -195,9 +200,10 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
   topTabText: {
-    fontSize: scale(13),
+    fontSize: scale(16),
     fontWeight: '600',
     color: COLORS.textSecondary,
+    fontFamily: fonts.balooMedium
   },
   topTabTextActive: {
     color: COLORS.heading,
@@ -214,8 +220,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: scale(14),
     padding: scale(16),
-    flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: scale(16),
     shadowColor: COLORS.black,
@@ -229,155 +233,180 @@ const styles = StyleSheet.create({
     marginRight: scale(12),
   },
   uploadBannerTitle: {
-    fontSize: scale(12),
-    fontWeight: '800',
+    fontSize: scale(16),
+    fontFamily: fonts.balooExtraBold,
     color: COLORS.heading,
     letterSpacing: 0.8,
     marginBottom: scale(4),
   },
   uploadBannerSub: {
-    fontSize: scale(11),
+    fontSize: scale(12),
     color: COLORS.textSecondary,
     lineHeight: scale(16),
     marginBottom: scale(8),
+    fontFamily: fonts.balooMedium,
   },
   uploadBannerOffer: {
-    fontSize: scale(11),
-    fontWeight: '700',
+    fontSize: scale(12),
+    fontFamily: fonts.balooExtraBold,
+    width: '40%',
     color: COLORS.heading,
   },
   orderBtn: {
     backgroundColor: COLORS.primary,
     paddingVertical: scale(12),
     paddingHorizontal: scale(16),
-    borderRadius: scale(10),
+    borderRadius: scale(12),
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 2,
+    shadowColor: COLORS.light,
+    shadowOpacity: 0.06,
+    shadowRadius: scale(8),
+    shadowOffset: { width: 0, height: scale(2) },
   },
   orderBtnText: {
     color: COLORS.white,
-    fontSize: scale(12),
+    fontSize: scale(14),
     fontWeight: '800',
     letterSpacing: 0.5,
+    fontFamily: fonts.balooExtraBold
   },
-  promoCard: {
-    borderRadius: scale(14),
-    padding: scale(16),
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: scale(16),
-    backgroundColor: COLORS.light,
-    borderWidth: 2,
-    borderColor: COLORS.primary,
-  },
-
   promoLeft: {
     flex: 1,
-    marginRight: scale(10),
+    width: '90%'
   },
-
   promoTagText: {
-    fontSize: scale(13),
-    fontWeight: '700',
+    fontSize: scale(16),
+    fontFamily: fonts.balooExtraBold,
     color: COLORS.heading,
     marginBottom: scale(2),
   },
-
   promoTitle: {
     fontSize: scale(20),
-    fontWeight: '800',
+    fontFamily: fonts.balooExtraBold,
     color: COLORS.heading,
     marginBottom: scale(8),
   },
-
-  promoDesc: {
-    fontSize: scale(11),
+  promoDescription: {
+    fontSize: scale(12),
     color: COLORS.textSecondary,
     lineHeight: scale(17),
+    fontFamily: fonts.balooMedium,
   },
-
   promoImage: {
     width: scale(100),
     height: scale(110),
   },
-
-  // ── Offer Card ────────────────────────────────────────────────
-  offerCard: {
-    borderRadius: scale(14),
-    padding: scale(16),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#D8D8F0', // lavender/purple from image
-    marginBottom: scale(16),
+  doctorImage: {
+    width: scale(100),
+    height: scale(130),
   },
-
   offerLeft: {
     flex: 1,
   },
-
   offerLabelRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: scale(4),
   },
-
   uptoBox: {
-    backgroundColor: COLORS.heading,
-    paddingHorizontal: scale(3),
-    paddingVertical: scale(2),
     borderRadius: scale(3),
     marginRight: scale(2),
+    width: scale(20),
+    height: scale(100),
+    marginTop: scale(10)
   },
-
   uptoText: {
-    color: COLORS.white,
-    fontSize: scale(6),
-    fontWeight: '800',
-    lineHeight: scale(8),
+    color: COLORS.black,
+    fontSize: scale(13),
     textAlign: 'center',
+    fontFamily: fonts.balooExtraBold
   },
-
   offerPercent: {
     fontSize: scale(30),
-    fontWeight: '900',
+    fontFamily: fonts.balooExtraBold,
     color: COLORS.heading,
     lineHeight: scale(36),
   },
-
   offerSub: {
-    fontSize: scale(16),
-    fontWeight: '700',
+    fontFamily: fonts.balooExtraBold,
+    fontSize: scale(18),
     color: COLORS.heading,
     marginBottom: scale(4),
   },
-
   offerDesc: {
-    fontSize: scale(12),
-    fontWeight: '600',
+    fontSize: scale(16),
+    fontFamily: fonts.balooBold,
     color: COLORS.heading,
-    marginBottom: scale(12),
+    marginLeft: scale(15),
+    marginBottom: scale(10),
+    marginTop: scale(-15)
   },
-
   shopBtn: {
     backgroundColor: COLORS.primary,
     alignSelf: 'flex-start',
     paddingVertical: scale(9),
     paddingHorizontal: scale(18),
     borderRadius: scale(8),
+    elevation: 3,
+    shadowColor: COLORS.light,
+    shadowOpacity: 0.06,
+    shadowRadius: scale(8),
+    shadowOffset: { width: 0, height: scale(2) },
   },
-
   shopBtnText: {
     color: COLORS.white,
-    fontSize: scale(12),
+    fontSize: scale(14),
     fontWeight: '800',
     letterSpacing: 0.5,
+    fontFamily: fonts.balooExtraBold
   },
-
   offerImage: {
     width: scale(110),
     height: scale(110),
   },
+  orderView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  cardsSection: {
+    position: 'relative',
+    marginBottom: scale(16),
+  },
+
+  decorStrip: {
+    position: 'absolute',
+    left: -scale(16),
+    top: scale(120),
+    width: scale(148),
+    height: scale(140),
+    backgroundColor: COLORS.pink,
+    borderTopRightRadius: scale(12),
+    borderBottomRightRadius: scale(12),
+    zIndex: 0,
+  },
+  promoCard: {
+    borderRadius: scale(14),
+    padding: scale(16),
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: scale(12),
+    backgroundColor: COLORS.lightGreen,
+    zIndex: 1,
+  },
+  offerCard: {
+    borderRadius: scale(14),
+    padding: scale(16),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#D8D8F0',
+    marginBottom: scale(16),
+    zIndex: 1,
+  },
+
 });
 
 export default HomeScreen;

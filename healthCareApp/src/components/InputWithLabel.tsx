@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { scale } from 'react-native-size-matters';
 import { COLORS } from '../utils/colors';
+import { fonts } from '../utils/fonts';
 
 interface InputWithLabelProps {
   label: string;
@@ -85,7 +86,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             onBlur={handleBlur}
             placeholder={placeholder}
             style={styles.input}
-            placeholderTextColor={COLORS.darkGrey}
+            placeholderTextColor={COLORS.lightGrey}
           />
 
           {secureTextEntry && (
@@ -147,7 +148,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: scale(44),
     fontSize: scale(14),
-    color: COLORS.black
+    color: COLORS.black,
+    fontFamily: fonts.balooBold,
   },
   toggle: {
     color: COLORS.green,

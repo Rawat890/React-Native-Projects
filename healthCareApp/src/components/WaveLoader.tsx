@@ -12,6 +12,7 @@ import Animated, {
   FadeIn,
   FadeOut,
 } from 'react-native-reanimated';
+import { COLORS } from '../utils/colors';
 
 export interface WaveLoaderProps {
   loading?: boolean;
@@ -117,10 +118,10 @@ const WaveStrip: React.FC<WaveStripProps> = ({
 const WaveLoader: React.FC<WaveLoaderProps> = ({
   loading = true,
   size = 72,
-  color = '#4EC8C8',
-  secondaryColor = '#A8E0E0',
-  ringColor = '#4EC8C8',
-  backgroundColor = '#FFFFFF',
+  color = COLORS.ringColor,
+  secondaryColor = COLORS.secondary2,
+  ringColor = COLORS.ringColor,
+  backgroundColor = COLORS.white,
   style,
   circleStyle,
   speed = 1,
@@ -138,8 +139,6 @@ const WaveLoader: React.FC<WaveLoaderProps> = ({
       cancelAnimation(fillProgress);
       return;
     }
-
-    // Front wave: 0 → 1, looping forever (linear)
     progress1.value = withRepeat(
       withTiming(1, { duration: baseDuration, easing: Easing.linear }),
       -1,

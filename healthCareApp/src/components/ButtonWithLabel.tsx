@@ -5,9 +5,13 @@ import {
   GestureResponderEvent,
   StyleSheet,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  StyleProp,
+  TextStyle,
+  ViewStyle
 } from "react-native";
 import { COLORS } from "../utils/colors";
+import { scale } from "react-native-size-matters";
 
 interface ButtonWithLabelProps {
   title: string;
@@ -16,6 +20,8 @@ interface ButtonWithLabelProps {
   disabled?: boolean;
   backgroundColor?: string;
   textColor?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 }
 
 const ButtonWithLabel: React.FC<ButtonWithLabelProps> = ({
@@ -24,9 +30,10 @@ const ButtonWithLabel: React.FC<ButtonWithLabelProps> = ({
   loading = false,
   disabled = false,
   backgroundColor = COLORS.green,
-  textColor = COLORS.white
+  textColor = COLORS.white,
+  containerStyle,
+  textStyle
 }) => {
-
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const pressIn = () => {
@@ -55,13 +62,22 @@ const ButtonWithLabel: React.FC<ButtonWithLabelProps> = ({
         style={[
           styles.button,
           { backgroundColor },
-          (disabled || loading) && styles.disabled
+          (disabled || loading) && styles.disabled,
+          containerStyle
         ]}
       >
         {loading ? (
           <ActivityIndicator color={textColor} />
         ) : (
-          <Text style={[styles.text, { color: textColor }]}>{title}</Text>
+          <Text
+            style={[
+              styles.text,
+              { color: textColor },
+              textStyle
+            ]}
+          >
+            {title}
+          </Text>
         )}
       </TouchableOpacity>
     </Animated.View>
@@ -72,14 +88,14 @@ export default ButtonWithLabel;
 
 const styles = StyleSheet.create({
   button: {
-    height: 48,
+    height: scale(48),
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10
+    borderRadius: scale(10)
   },
 
   text: {
-    fontSize: 16,
+    fontSize: scale(16),
     fontWeight: "600"
   },
 

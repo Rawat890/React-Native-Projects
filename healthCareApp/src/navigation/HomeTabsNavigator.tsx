@@ -11,7 +11,7 @@ import { scale } from 'react-native-size-matters';
 import { homeActiveIcon, messageActiveIcon, uploadIcon } from '../utils/images';
 
 const Tab = createBottomTabNavigator();
-
+const EmptyScreen = () => null;
 const TabIcon: React.FC<{ focused: boolean; label: string, icon: any }> = ({ focused, label, icon }) => {
   const animStyle = useAnimatedStyle(() => ({
     transform: [{ scale: withSpring(focused ? 1.15 : 1, { damping: 12 }) }],
@@ -37,7 +37,7 @@ const HomeTabsNavigator: React.FC = () => (
       name={SCREENS.Home}
       component={HomeScreen}
       options={{
-        tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="home" icon={homeActiveIcon}/>,
+        tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="home" icon={homeActiveIcon} />,
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.tabInactive,
       }}
@@ -47,7 +47,22 @@ const HomeTabsNavigator: React.FC = () => (
       component={NearbyPharmacyTab}
       options={{
         tabBarLabel: 'Pharmacy',
-        tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="pharmacy" icon={uploadIcon}/>,
+        tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="pharmacy" icon={uploadIcon} />,
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.tabInactive,
+      }}
+    />
+    <Tab.Screen
+      name={SCREENS.Messages}
+      component={EmptyScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <TabIcon
+            focused={focused}
+            label="reminder"
+            icon={messageActiveIcon}
+          />
+        ),
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.tabInactive,
       }}
@@ -56,7 +71,7 @@ const HomeTabsNavigator: React.FC = () => (
       name={SCREENS.Reminder}
       component={ReminderTab}
       options={{
-        tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="reminder" icon={messageActiveIcon}/>,
+        tabBarIcon: ({ focused }) => <TabIcon focused={focused} label="reminder" icon={messageActiveIcon} />,
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.tabInactive,
       }}
