@@ -18,3 +18,5 @@ export const pharmacyIcon = require('../assets/icons/icMedicine.png');
 export const uploadIcon = require('../assets/icons/icUpload.png');
 export const reminderIcon = require('../assets/icons/icReminder.png');
 export const fileIcon = require('../assets/icons/icFile.png');
+export const locationIcon = require('../assets/icons/icLocation.png');
+export const starIcon = require('../assets/icons/icStar.png');
