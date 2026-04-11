@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity
 } from "react-native";
+import { COLORS } from "../utils/colors";
 
 interface ButtonWithLabelProps {
   title: string;
@@ -22,8 +23,8 @@ const ButtonWithLabel: React.FC<ButtonWithLabelProps> = ({
   onPress,
   loading = false,
   disabled = false,
-  backgroundColor = "#4CAF50",
-  textColor = "#fff"
+  backgroundColor = COLORS.green,
+  textColor = COLORS.white
 }) => {
 
   const scaleAnim = useRef(new Animated.Value(1)).current;
