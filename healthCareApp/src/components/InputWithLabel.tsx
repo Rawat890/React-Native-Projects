@@ -1,19 +1,36 @@
-
-
 import React, { useRef, useState } from 'react';
-import { Animated, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Animated,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Image,
+  ImageSourcePropType,
+} from 'react-native';
 import { scale } from 'react-native-size-matters';
 import { COLORS } from '../utils/colors';
 
 interface InputWithLabelProps {
-  label: string,
-  value: string,
-  placeholder?: string,
-  onChangeText: (text: string) => void,
-  secureTextEntry: boolean,
-  error?: string
+  label: string;
+  value: string;
+  placeholder?: string;
+  onChangeText: (text: string) => void;
+  secureTextEntry: boolean;
+  error?: string;
+  icon?: ImageSourcePropType;
 }
-const InputWithLabel: React.FC<InputWithLabelProps> = ({ label, placeholder, onChangeText, secureTextEntry, value, error }) => {
+
+const InputWithLabel: React.FC<InputWithLabelProps> = ({
+  label,
+  placeholder,
+  onChangeText,
+  secureTextEntry,
+  value,
+  error,
+  icon,
+}) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [hidePassword, setHidePassword] = useState<boolean>(secureTextEntry);
   const borderAnim = useRef(new Animated.Value(0)).current;
@@ -23,83 +40,125 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({ label, placeholder, onC
     Animated.timing(borderAnim, {
       toValue: 1,
       duration: 200,
-      useNativeDriver: false
+      useNativeDriver: false,
     }).start();
-  }
+  };
 
   const handleBlur = () => {
     setIsFocused(false);
     Animated.timing(borderAnim, {
       toValue: 0,
       duration: 200,
-      useNativeDriver: false
+      useNativeDriver: false,
     }).start();
-  }
+  };
 
   const borderColor = borderAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#ccc', "#4caf50"]
-  })
+    outputRange: [COLORS.black, COLORS.green],
+  });
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <Animated.View style={[styles.inputContainer, { borderColor: borderColor }]}>
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          secureTextEntry={secureTextEntry ? hidePassword : false}          
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          placeholder={placeholder}
-          style={styles.input}
-          placeholderTextColor={COLORS.white}
-        />
-        {
-          secureTextEntry && (
+      <Animated.View style={[styles.fieldset, { borderColor }]}>
+        <View style={styles.outerWrapper}>
+          <Animated.Text style={[styles.label, { color: borderColor }]}>
+            {label}
+          </Animated.Text>
+        </View>
+
+        <View style={styles.inputRow}>
+          {icon && (
+            <View style={styles.iconWrapper}>
+              <Image
+                source={icon}
+                style={styles.icon}
+                resizeMode="contain"
+              />
+            </View>
+          )}
+
+          <TextInput
+            value={value}
+            onChangeText={onChangeText}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            style={styles.input}
+            placeholderTextColor={COLORS.darkGrey}
+          />
+
+          {secureTextEntry && (
             <Pressable onPress={() => setHidePassword(!hidePassword)}>
-              <Text style={styles.toggle}>{hidePassword ? "Show" : "Hide"}</Text>
+              <Text style={styles.toggle}>
+                {/* {hidePassword ? 'Show' : 'Hide'} */}
+              </Text>
             </Pressable>
-          )
-        }
+          )}
+        </View>
       </Animated.View>
+
       {error && <Text style={styles.error}>{error}</Text>}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom:scale(20)
+    marginBottom: scale(20),
+    paddingTop: scale(10),
   },
-
-  label: {
-    fontSize: scale(14),
-    marginBottom: scale(6),
-    fontWeight: "500",
-    color:COLORS.white
-  },
-  inputContainer: {
+  fieldset: {
     borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    flexDirection: "row",
-    alignItems: "center"
+    borderRadius: scale(12),
+    paddingHorizontal: scale(12),
+    paddingTop: scale(10),
+    paddingBottom: scale(10),
+    position: 'relative',
+  },
+  outerWrapper: {
+    position: 'absolute',
+    top: -scale(11),
+    left: scale(14),
+    backgroundColor: COLORS.white,
+    paddingHorizontal: scale(4),
+  },
+  label: {
+    fontSize: scale(13),
+    fontWeight: '600',
+    color: COLORS.black
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: scale(44),
+  },
+  iconWrapper: {
+    marginRight: scale(10),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  icon: {
+    width: scale(20),
+    height: scale(20),
   },
   input: {
     flex: 1,
-    height: 45,
-    color: COLORS.white,
+    height: scale(44),
+    fontSize: scale(14),
+    color: COLORS.black
   },
   toggle: {
-    color: "#4CAF50",
-    fontWeight: "600"
+    color: COLORS.green,
+    fontWeight: '600',
+    fontSize: scale(13),
   },
   error: {
-    marginTop: 5,
-    color: "red",
-    fontSize: 12
-  }
-})
+    marginTop: scale(5),
+    color: COLORS.red,
+    fontSize: scale(12),
+  },
+});
 
 export default InputWithLabel;
