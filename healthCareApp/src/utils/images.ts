@@ -20,3 +20,4 @@ export const reminderIcon = require('../assets/icons/icReminder.png');
 export const fileIcon = require('../assets/icons/icFile.png');
 export const locationIcon = require('../assets/icons/icLocation.png');
 export const starIcon = require('../assets/icons/icStar.png');
+export const doctor = require('../assets/images/doctor.png');

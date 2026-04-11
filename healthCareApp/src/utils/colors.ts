@@ -20,6 +20,7 @@ export const COLORS = {
   surface: '#16161a',
   surfaceAlt: '#1c1c22',
   accent: '#a78bfa',
+  light2: '#F4F6FA',
   accentSoft: '#a78bfa18',
   text: '#f0eefc',
   muted: '#6b6a7e',
@@ -48,5 +49,9 @@ export const COLORS = {
   blueTint: '#DBEAFE',
   splash: '#5391B4',
   darkBlue: '#04238E',
-  light: '#D1E8F0'
+  light: '#D1E8F0',
+  pink: '#F5E1E9',
+  lightGreen: '#C8F5C4',
+  ringColor: '#4EC8C8',
+  secondary2: '#A8E0E0'
 };

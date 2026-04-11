@@ -6,4 +6,5 @@ export const SCREENS = {
   Pharmacy: 'Pharmacy',
   NearBy: 'NearBy',
   Reminder: 'Reminder',
+  Messages: 'Messages'
 }
