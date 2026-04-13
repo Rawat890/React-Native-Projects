@@ -53,7 +53,7 @@ Fetches records filtered by uid from authService.currentUser()?.uid
 
 7. ReminderTab
 
-8 Firebase Auth handles persistence automatically. Once a user logs in, Firebase stores the auth token in the device's local storage. On every app restart, Firebase restores the session without requiring login again.
+8. Firebase Auth handles persistence automatically. Once a user logs in, Firebase stores the auth token in the device's local storage. On every app restart, Firebase restores the session without requiring login again.
 
 Key Dependencies Used -
 <react-hook-form>
