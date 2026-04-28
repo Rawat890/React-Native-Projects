@@ -1,5 +1,8 @@
 import { useFonts } from 'expo-font';
 import React from 'react';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from './components/Notification';
 import AppNavigator from './navigation/AppNavigator';
 import { fonts } from './utils/fonts';
 
@@ -15,7 +18,12 @@ const App = () => {
   if (!loaded) return null;
 
   return (
-    <AppNavigator />
+    <SafeAreaProvider>
+      <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1 }}>
+        <AppNavigator/>
+        <Toast config={toastConfig}/>
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
 
