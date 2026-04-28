@@ -1,0 +1,68 @@
+import { spendIcon } from "./images";
+
+export const dummyData = [
+  {
+    id: "1",
+    title: "Kurkure & Biscuit",
+    type: "Food and snacks",
+    expense: 200,
+    dated: new Date().toLocaleDateString("en-GB"),
+    icon: spendIcon,
+  },
+  {
+    id: "2",
+    title: "Shirt and pant",
+    type: "Clothes",
+    expense: 400,
+    dated: new Date().toLocaleDateString("en-GB"),
+    icon: spendIcon,
+  },
+  {
+    id: "3",
+    title: "A bedsheet and sofa cover",
+    type: "Daily uses",
+    expense: 200,
+    dated: new Date().toLocaleDateString("en-GB"),
+    icon: spendIcon,
+  },
+  {
+    id: "4",
+    title: "Cold Drinks",
+    type: "Drinks",
+    expense: 200,
+    dated: new Date().toLocaleDateString("en-GB"),
+    icon: spendIcon,
+  },
+  {
+    id: "5",
+    title: "Pasta and Mushroom patty",
+    type: "Food and snacks",
+    expense: 200,
+    dated: new Date().toLocaleDateString("en-GB"),
+    icon: spendIcon,
+  },
+  {
+    id: "6",
+    title: "Pasta and Mushroom patty",
+    type: "Food and snacks",
+    expense: 200,
+    dated: new Date().toLocaleDateString("en-GB"),
+    icon: spendIcon,
+  },
+  {
+    id: "7",
+    title: "Pasta and Mushroom patty",
+    type: "Food and snacks",
+    expense: 200,
+    dated: new Date().toLocaleDateString("en-GB"),
+    icon: spendIcon,
+  },
+  {
+    id: "8",
+    title: "Pasta and Mushroom patty",
+    type: "Food and snacks",
+    expense: 200,
+    dated: new Date().toLocaleDateString("en-GB"),
+    icon: spendIcon,
+  },
+];
