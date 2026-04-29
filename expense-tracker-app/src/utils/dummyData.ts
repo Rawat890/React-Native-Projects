@@ -1,5 +1,3 @@
-import { spendIcon } from "./images";
-
 export const dummyData = [
   {
     id: "1",
@@ -7,7 +5,7 @@ export const dummyData = [
     type: "Food and snacks",
     expense: 200,
     dated: new Date().toLocaleDateString("en-GB"),
-    icon: spendIcon,
+    icon: "📚",
   },
   {
     id: "2",
@@ -15,7 +13,7 @@ export const dummyData = [
     type: "Clothes",
     expense: 400,
     dated: new Date().toLocaleDateString("en-GB"),
-    icon: spendIcon,
+    icon: "📚",
   },
   {
     id: "3",
@@ -23,7 +21,7 @@ export const dummyData = [
     type: "Daily uses",
     expense: 200,
     dated: new Date().toLocaleDateString("en-GB"),
-    icon: spendIcon,
+    icon: "📚",
   },
   {
     id: "4",
@@ -31,7 +29,7 @@ export const dummyData = [
     type: "Drinks",
     expense: 200,
     dated: new Date().toLocaleDateString("en-GB"),
-    icon: spendIcon,
+    icon: "📚",
   },
   {
     id: "5",
@@ -39,7 +37,7 @@ export const dummyData = [
     type: "Food and snacks",
     expense: 200,
     dated: new Date().toLocaleDateString("en-GB"),
-    icon: spendIcon,
+    icon: "📚",
   },
   {
     id: "6",
@@ -47,7 +45,7 @@ export const dummyData = [
     type: "Food and snacks",
     expense: 200,
     dated: new Date().toLocaleDateString("en-GB"),
-    icon: spendIcon,
+    icon: "📚",
   },
   {
     id: "7",
@@ -55,7 +53,7 @@ export const dummyData = [
     type: "Food and snacks",
     expense: 200,
     dated: new Date().toLocaleDateString("en-GB"),
-    icon: spendIcon,
+    icon: "📚",
   },
   {
     id: "8",
@@ -63,6 +61,6 @@ export const dummyData = [
     type: "Food and snacks",
     expense: 200,
     dated: new Date().toLocaleDateString("en-GB"),
-    icon: spendIcon,
+    icon: "📚",
   },
 ];
