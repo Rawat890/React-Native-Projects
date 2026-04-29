@@ -23,7 +23,7 @@ function AppTabs() {
         headerShown: false,
         tabBarStyle: styles.tabBar,
         tabBarShowLabel: true,
-        tabBarLabelStyle: styles.tabLabel
+        tabBarLabelStyle: styles.tabLabel,
       }}
     >
       <Tab.Screen name={SCREENS.Home} component={Home} options={{
@@ -50,8 +50,10 @@ function AppTabs() {
 const AppNavigator = () => {
   return (
     <NavigationContainer>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="BottomTabs" component={AppTabs} />
       <Stack.Screen name={SCREENS.Profile} component={Profile} />
+      </Stack.Navigator>
     </NavigationContainer>
 
   )
