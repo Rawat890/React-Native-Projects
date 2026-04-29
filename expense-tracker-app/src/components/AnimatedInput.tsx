@@ -66,6 +66,7 @@ const AnimatedInput: React.FC<AnimatedInputProps> = ({
           onBlur={handleBlur}
           placeholderTextColor={placeholderColor}
           onChangeText={onChangeText}
+          style={textStyle}
         />
         {
           secureTextEntry && (
