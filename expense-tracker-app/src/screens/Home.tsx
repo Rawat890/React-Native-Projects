@@ -1,34 +1,89 @@
-import React, { useState } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { scale } from 'react-native-size-matters';
+import AnimatedButton from "../components/AnimatedButton";
 import EmptyList from '../components/EmptyList';
+import { useExpenses } from '../context/ExpenseContext';
 import { COLORS } from '../utils/colors';
-import { dummyData } from '../utils/dummyData';
 import { fonts } from '../utils/fonts';
-import { EXPENSE_COLORS } from '../utils/helper';
 
 const Home = () => {
   const [text, setText] = useState<string>('');
-  const [expenses, setExpenses] = useState([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { expenses, setExpenses } = useExpenses();
+  console.log("Expense are - ", expenses);
 
-  const totalSpentExpense = dummyData.reduce((sum, item) => item.expense + sum, 0)
-  console.log("Total - ", totalSpentExpense)
+  const totalSpentExpense = expenses.reduce((sum, item) => item.amount + sum, 0)
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const storedExpenses = await AsyncStorage.getItem("expensesList");
+        if (storedExpenses !== null) {
+          setExpenses(JSON.parse(storedExpenses))
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    getData();
+  }, [setExpenses])
+
+  useEffect(() => {
+    const saveExpense = async () => {
+      if (!isLoading) {
+        try {
+          await AsyncStorage.setItem("expensesList", JSON.stringify(expenses));
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    }
+    saveExpense();
+  }, [expenses, isLoading]);
+
+  const handleDeleteExpense = async (id: string) => {
+    try {
+      const updatedExpenses = expenses.filter((item) => item.id !== id);
+      setExpenses(updatedExpenses);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   const renderExpense = ({ item, index }) => {
-    const color = EXPENSE_COLORS[index % EXPENSE_COLORS.length];
-
+    console.log("Item - ", item)
     return (
-      <View style={[styles.expenseItem, { borderLeftWidth: 4, borderLeftColor: color }]}>
-        <Text style={styles.expenseImage}>{item.icon}</Text>
+      <View style={[styles.expenseItem, { borderLeftWidth: 4, borderLeftColor: item.color }]}>
+        <View style={styles.expenseItemInnerView}>
+          <Text style={styles.expenseImage}>{item.icon}</Text>
 
-        <View style={styles.expenseInfo}>
-          <Text style={styles.expenseName}>{item.title}</Text>
-          <Text style={[styles.expenseType, { backgroundColor: color }]}>{item.type}</Text>
+          <View style={styles.expenseInfo}>
+            <Text style={styles.expenseName}>{item.title}</Text>
+            <Text style={[styles.expenseType, { backgroundColor: item.color }]}>{item.category}</Text>
+          </View>
+
+          <View style={styles.expenseAmount}>
+            <Text style={[styles.expense, { color: item.color }]}>${item.amount}</Text>
+            <Text style={styles.created}>{item.date}</Text>
+          </View>
         </View>
-
-        <View>
-          <Text style={[styles.expense, { color }]}>${item.expense}</Text>
-          <Text style={styles.created}>{item.dated}</Text>
+        <View style={styles.buttonContainer}>
+          <AnimatedButton
+            title="Update expense"
+            titleStyle={styles.buttonTitle}
+            inputContainerStyle={styles.updateButton}
+          />
+          <AnimatedButton
+            title="Delete expense"
+            onPress={() => handleDeleteExpense(item.id)}
+            titleStyle={styles.buttonTitle}
+            inputContainerStyle={styles.deleteButton}
+          />
         </View>
       </View>
     );
@@ -44,7 +99,7 @@ const Home = () => {
           <Text style={styles.total}>${totalSpentExpense.toFixed(2)}</Text>
         </View>
         <FlatList
-          data={dummyData}
+          data={expenses}
           keyExtractor={item => item.id}
           ListEmptyComponent={EmptyList}
           renderItem={renderExpense}
@@ -86,32 +141,37 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     padding: scale(10),
     marginVertical: scale(5),
+  },
+  expenseItemInnerView: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   expenseImage: {
     fontSize: scale(30)
   },
   expenseType: {
     elevation: 2,
-    fontSize: scale(14),
+    fontSize: scale(16),
     fontFamily: fonts.balooMedium,
     padding: scale(5),
     color: COLORS.white,
     alignSelf: 'flex-start',
     borderRadius: scale(5),
-    marginVertical: scale(5)
+    minWidth: scale(50),
+    marginVertical: scale(5),
+    textAlign: 'center',
   },
   expenseInfo: {
     width: '50%',
+    marginLeft: scale(15)
   },
   expenseName: {
-    fontSize: scale(14),
+    fontSize: scale(18),
     fontFamily: fonts.balooSemi
   },
   expense: {
-    fontSize: scale(14),
+    fontSize: scale(18),
     fontFamily: fonts.balooExtraBold
   },
   created: {
@@ -134,6 +194,35 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: scale(26),
     fontFamily: fonts.balooBold,
+    textAlign: 'center'
+  },
+  expenseAmount: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: scale(10),
+  },
+  buttonContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    marginTop: scale(20),
+  },
+  updateButton: {
+    backgroundColor: COLORS.green,
+    padding: scale(10),
+    borderRadius: scale(5),
+    marginBottom: scale(10),
+  },
+  deleteButton: {
+    backgroundColor: COLORS.red,
+    padding: scale(10),
+    borderRadius: scale(5),
+    marginBottom: scale(10),
+  },
+  buttonTitle: {
+    fontFamily: fonts.balooBold,
+    fontSize: scale(14),
+    color: COLORS.white,
     textAlign: 'center'
   }
 
