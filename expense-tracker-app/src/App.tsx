@@ -3,9 +3,9 @@ import React from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './components/Notification';
+import { ExpenseContextProvider } from './context/ExpenseContext';
 import AppNavigator from './navigation/AppNavigator';
 import { fonts } from './utils/fonts';
-
 const App = () => {
   const [loaded] = useFonts({
     [fonts.balooBold]: require('../assets/fonts/BalooThambi2-Bold.ttf'),
@@ -20,8 +20,10 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1 }}>
-        <AppNavigator/>
-        <Toast config={toastConfig}/>
+        <ExpenseContextProvider>
+          <AppNavigator />
+          <Toast config={toastConfig} />
+        </ExpenseContextProvider>
       </SafeAreaView>
     </SafeAreaProvider>
   )
