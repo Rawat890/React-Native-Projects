@@ -16,10 +16,11 @@ interface AnimatedInputProps {
   secureTextEntry?: boolean;
   error?: string,
   placeholderColor?: string
+  keyboardType?: string
 }
 
 const AnimatedInput: React.FC<AnimatedInputProps> = ({
-  label, placeholder, leftIcon, onChangeText, secureTextEntry, inputContainerStyle, labelStyle, textStyle, error, value, placeholderColor
+  label, placeholder, leftIcon, onChangeText, secureTextEntry, inputContainerStyle, labelStyle, textStyle, error, value, placeholderColor, keyboardType
 }) => {
 
   const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
@@ -67,6 +68,7 @@ const AnimatedInput: React.FC<AnimatedInputProps> = ({
           placeholderTextColor={placeholderColor}
           onChangeText={onChangeText}
           style={textStyle}
+          keyboardType={keyboardType}
         />
         {
           secureTextEntry && (
